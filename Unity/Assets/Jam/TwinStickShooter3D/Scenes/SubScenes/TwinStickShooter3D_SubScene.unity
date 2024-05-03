@@ -1168,6 +1168,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3409344557983688220, guid: a1bd441edf8f09c4da06808f49601c86,
+        type: 3}
+      propertyPath: m_InertiaTensor.x
+      value: 9999
+      objectReference: {fileID: 0}
+    - target: {fileID: 3409344557983688220, guid: a1bd441edf8f09c4da06808f49601c86,
+        type: 3}
+      propertyPath: m_InertiaTensor.z
+      value: 9999
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

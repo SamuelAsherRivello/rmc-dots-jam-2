@@ -37,12 +37,13 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 				// Towards the direction of the lookComposite and use AngularSpeed or something to do it
 				if (!math.all(lookComposite.xy == float2.zero))
 				{
-					float3 currentDirection = new float3(0, 0, 1); // Assuming facing forward initially.
+					
+					float3 currentDirection = new float3(0, 0, 0); // Assuming facing forward initially.
 					quaternion currentRotation = quaternion.LookRotationSafe(currentDirection, math.up());
 					quaternion targetRotation = quaternion.LookRotationSafe(lookComposite, math.up());
 
 					// Calculate the step size for rotation
-					float step = playerFaceComponent.Value * deltaTime; // This assumes PlayerFaceComponent.Value is AngularSpeed
+					float step = playerFaceComponent.Value * deltaTime;
 
 					// Slerp between the current and target rotation
 					quaternion slerpedRotation = math.slerp(currentRotation, targetRotation, step);

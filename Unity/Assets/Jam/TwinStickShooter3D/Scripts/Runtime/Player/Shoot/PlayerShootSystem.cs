@@ -55,7 +55,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
 
 					// Give a 'push' once in direction the player is facing
-					var bulletForce = new Vector3(1, 0, 1) *
+					var direction = localTransform.Rotation.value.xyz;
+					var bulletForce = new Vector3(direction.x, 0, direction.y) *
 					                  playerShootComponent.ValueRO.Speed;
 					
 					ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity,

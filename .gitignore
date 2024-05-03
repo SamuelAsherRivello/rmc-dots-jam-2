@@ -82,3 +82,4 @@ crashlytics-build.properties
 *.vsconfig
 [Uu]nity/.idea/.idea.Unity/.idea/projectSettingsUpdater.xml
 
+Unity/Packages/manifest.json

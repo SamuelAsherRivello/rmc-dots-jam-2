@@ -59,8 +59,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 							});
 
 
-				
-
 
 					ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity,
 						new PhysicsVelocityImpulseComponent

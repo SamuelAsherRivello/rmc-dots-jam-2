@@ -5,5 +5,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     public struct PlayerShootComponent : IComponentData
     {
 		public Entity Prefab;
-	}
+		public float Speed;
+    }
 }

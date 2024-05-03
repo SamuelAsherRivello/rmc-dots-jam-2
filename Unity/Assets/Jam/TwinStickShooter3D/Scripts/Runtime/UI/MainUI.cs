@@ -40,6 +40,15 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             _dialogVisualElement.IsVisible = false;
             
             RestartButton.clicked += RestartButton_OnClicked;
+            
+            _uiDocument.rootVisualElement.RegisterCallback<KeyDownEvent>(evt =>
+            {
+                if (evt.keyCode == KeyCode.Space)
+                {
+                    Debug.Log("done");
+                    evt.StopImmediatePropagation();
+                }
+            }, TrickleDown.TrickleDown);
         }
 
         //  Methods ---------------------------------------

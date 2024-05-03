@@ -1,5 +1,6 @@
 ﻿using RMC.DOTS.SystemGroups;
 using RMC.DOTS.Systems.Input;
+using RMC.DOTS.Systems.PhysicsVelocityImpulse;
 using RMC.DOTS.Systems.Player;
 using Unity.Burst;
 using Unity.Collections;
@@ -38,18 +39,34 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 			if (willShoot)
 			{
 
-				foreach (var playerShootComponent in
-					SystemAPI.Query<RefRO <PlayerShootComponent>>().WithAll<PlayerTag>())
+				foreach (var (playerShootComponent, localTransform) in
+					SystemAPI.Query<RefRO <PlayerShootComponent>, LocalTransform>().WithAll<PlayerTag>())
 				{
 					var instanceEntity = ecb.Instantiate(playerShootComponent.ValueRO.Prefab);
 
+					// Move to initial position
 					ecb.SetComponent<LocalTransform>(instanceEntity,
 						new LocalTransform
 							{
-								Position = new Unity.Mathematics.float3(2, 2, 2),
+								Position = localTransform.Position,
 								Rotation = quaternion.identity,
 								Scale = 1
 							});
+
+
+					// Give a 'push' once in direction the player is facing
+					var bulletForce = new Vector3(1, 0, 1) *
+					                  playerShootComponent.ValueRO.Speed;
+					
+					ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity,
+						new PhysicsVelocityImpulseComponent
+						{
+							//FYI Was designed for randomness
+							//Here, using it for non-randomness
+							CanBeNegative = false,
+							MinForce = bulletForce,
+							MaxForce = bulletForce,
+						});
 
 				}
 			}

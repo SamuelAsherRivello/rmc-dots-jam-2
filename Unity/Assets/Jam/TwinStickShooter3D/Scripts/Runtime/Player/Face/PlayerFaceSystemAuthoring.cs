@@ -3,21 +3,21 @@ using UnityEngine;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
-    public class PlayerMoveSystemAuthoring : MonoBehaviour
+    public class PlayerFaceSystemAuthoring : MonoBehaviour
     {
         [SerializeField] 
         public bool IsSystemEnabled = true;
         
-        public struct PlayerMoveSystemIsEnabledTag : IComponentData {}
+        public struct PlayerFaceSystemIsEnabledTag : IComponentData {}
         
-        public class PlayerMoveSystemAuthoringBaker : Baker<PlayerMoveSystemAuthoring>
+        public class PlayerFaceSystemAuthoringBaker : Baker<PlayerFaceSystemAuthoring>
         {
-            public override void Bake(PlayerMoveSystemAuthoring authoring)
+            public override void Bake(PlayerFaceSystemAuthoring authoring)
             {
                 if (authoring.IsSystemEnabled)
                 {
                     Entity inputEntity = GetEntity(TransformUsageFlags.Dynamic);
-                    AddComponent<PlayerMoveSystemIsEnabledTag>(inputEntity);
+                    AddComponent<PlayerFaceSystemIsEnabledTag>(inputEntity);
                 }
             }
         }

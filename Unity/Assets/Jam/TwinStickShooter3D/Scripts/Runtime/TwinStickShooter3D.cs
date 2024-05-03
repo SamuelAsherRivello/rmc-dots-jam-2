@@ -18,7 +18,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     ///
     /// Responsibilities include to wire together the ECS areas, and the GameObject areas like UI
     /// </summary>
-    public class DOTSTemplate : MonoBehaviour
+    public class TwinStickShooter3D : MonoBehaviour
     {
         //  Events ----------------------------------------
 

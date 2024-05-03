@@ -16,7 +16,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             state.RequireForUpdate<BeginPresentationEntityCommandBufferSystem.Singleton>();
         }
 
-        
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
@@ -24,26 +23,13 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().
                 CreateCommandBuffer(state.WorldUnmanaged);
             
-            //Remove any existing BulletWasHitTag
-            foreach (var (bulletTag, bulletWasHitTag, entity) 
-                     in SystemAPI.Query<BulletTag, BulletWasHitTag>().
-                         WithEntityAccess().WithNone<DestroyEntityComponent>())
-            {
-                //Debug.Log($"GamePickup ({entity.Index}) Set To REMOVE on TimeFrameCount: {Time.frameCount}");
-                ecb.RemoveComponent<BulletWasHitTag>(entity);
-            }
-            
             //Add new BulletWasHitTag
             foreach (var (bulletTag, physicsTriggerOutputComponent, entity) 
                      in SystemAPI.Query<BulletTag, PhysicsTriggerOutputComponent>().
                          WithEntityAccess())
             {
-                if (physicsTriggerOutputComponent.PhysicsTriggerType == PhysicsTriggerType.Enter &&
-                    physicsTriggerOutputComponent.TimeFrameCountForLastCollision <= Time.frameCount - PhysicsTriggerOutputComponent.FramesToWait)
-                { 
-                    //Debug.Log($"GamePickup ({entity.Index}) Set To Enter on TimeFrameCount: {Time.frameCount}");
-                    ecb.AddComponent<BulletWasHitTag>(entity);
-                }
+                //Debug.Log($"GamePickup ({entity.Index}) Set To Enter on TimeFrameCount: {Time.frameCount}");
+                //ecb.AddComponent<BulletWasHitTag>(entity);
             }
         }
     }

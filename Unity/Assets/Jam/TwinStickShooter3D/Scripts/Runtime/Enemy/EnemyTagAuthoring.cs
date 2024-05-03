@@ -11,7 +11,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
                                 
-                AddComponent<BulletTag>(entity);
+                AddComponent<EnemyTag>(entity);
             }
         }
     }

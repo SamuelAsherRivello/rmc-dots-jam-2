@@ -44,21 +44,24 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 				{
 					var instanceEntity = ecb.Instantiate(playerShootComponent.ValueRO.Prefab);
 
+
+					// Give a 'push' once in direction the player is facing
+					var bulletForce = -localTransform.Forward() * playerShootComponent.ValueRO.Speed;
+					var bulletForceNormalize = math.normalize(bulletForce);
+
 					// Move to initial position
 					ecb.SetComponent<LocalTransform>(instanceEntity,
 						new LocalTransform
 							{
-								Position = localTransform.Position,
+								Position = localTransform.Position + bulletForceNormalize * 1.5f, //'in front' of the eyes
 								Rotation = quaternion.identity,
 								Scale = 1
 							});
 
 
-					// Give a 'push' once in direction the player is facing
-					var direction = localTransform.Rotation.value.xyz;
-					var bulletForce = new Vector3(direction.x, 0, direction.y) *
-					                  playerShootComponent.ValueRO.Speed;
-					
+				
+
+
 					ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity,
 						new PhysicsVelocityImpulseComponent
 						{

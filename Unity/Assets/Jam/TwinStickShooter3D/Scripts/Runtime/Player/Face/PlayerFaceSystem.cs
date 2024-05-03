@@ -5,7 +5,6 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
-using Unity.Physics.Extensions;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
@@ -27,17 +26,35 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             // GetPlayerInputSystem that runs earlier in the frame.
             float2 look = SystemAPI.GetSingleton<InputComponent>().LookFloat2;
             float deltaTime = SystemAPI.Time.DeltaTime;
-            float2 moveComposite = float2.zero;
-            
-            moveComposite.x = look.x;
-            moveComposite.y = look.y;
-            
-            foreach (var (physicsVelocity, mass, playerMoveComponent) in 
-                     SystemAPI.Query<RefRW<PhysicsVelocity>,PhysicsMass, PlayerFaceComponent>().WithAll<PlayerTag>())
+
+            float3 lookComposite = new float3(look.x, look.y, 0);
+
+            foreach (var (physicsVelocity, physicsMass, playerFaceComponent, playerTag) in
+                     SystemAPI.Query<RefRW<PhysicsVelocity>, PhysicsMass, PlayerFaceComponent, PlayerTag>())
             {
-                float3 moveComposite3D = new float3(moveComposite.x, 0f, moveComposite.y) * (deltaTime * playerMoveComponent.Value);
-                physicsVelocity.ValueRW.ApplyLinearImpulse(in mass, moveComposite3D);
-            }
-        }
+
+				// TODO: Add code here to slowly rotation by PlayerFaceComponent.Value as the speed
+				// Towards the direction of the lookComposite and use AngularSpeed or something to do it
+				if (!math.all(lookComposite.xy == float2.zero))
+				{
+					float3 currentDirection = new float3(0, 0, 1); // Assuming facing forward initially.
+					quaternion currentRotation = quaternion.LookRotationSafe(currentDirection, math.up());
+					quaternion targetRotation = quaternion.LookRotationSafe(lookComposite, math.up());
+
+					// Calculate the step size for rotation
+					float step = playerFaceComponent.Value * deltaTime; // This assumes PlayerFaceComponent.Value is AngularSpeed
+
+					// Slerp between the current and target rotation
+					quaternion slerpedRotation = math.slerp(currentRotation, targetRotation, step);
+
+					// Convert quaternion to euler angles in radians and then to degrees
+					float3 euler = math.degrees(math.Euler(slerpedRotation));
+
+					// Set the angular velocity towards target rotation
+					physicsVelocity.ValueRW.Angular = euler;
+				}
+			}
+
+		}
     }
 }

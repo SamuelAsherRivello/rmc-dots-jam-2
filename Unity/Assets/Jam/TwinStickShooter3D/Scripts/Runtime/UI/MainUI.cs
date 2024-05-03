@@ -45,7 +45,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             {
                 if (evt.keyCode == KeyCode.Space)
                 {
-                    Debug.Log("done");
                     evt.StopImmediatePropagation();
                 }
             }, TrickleDown.TrickleDown);

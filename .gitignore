@@ -75,6 +75,9 @@ crashlytics-build.properties
 [Uu]nity/[Aa]ssets/[Ss]treamingAssets/aa.meta
 [Uu]nity/[Aa]ssets/[Ss]treamingAssets/aa/*
 
+[Uu]nity/[Aa]ssets/[Ss]amples/*
+[Uu]nity/[Aa]ssets/[Ss]amples.meta
+
 # Visual Studio
 *.vsconfig
 [Uu]nity/.idea/.idea.Unity/.idea/projectSettingsUpdater.xml

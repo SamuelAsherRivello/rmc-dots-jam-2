@@ -1,37 +1,37 @@
-﻿using RMC.DOTS.SystemGroups;
-using Unity.Burst;
-using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Transforms;
+﻿//using RMC.DOTS.SystemGroups;
+//using Unity.Burst;
+//using Unity.Entities;
+//using Unity.Mathematics;
+//using Unity.Transforms;
 
-namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
-{
-    [UpdateInGroup(typeof(PauseableSystemGroup))]
-    public partial struct RotateSystem : ISystem
-    {
-        [BurstCompile]
-        public void OnCreate(ref SystemState state)
-        {
-            state.RequireForUpdate<RotateSystemAuthoring.RotateSystemIsEnabledTag>();
-        }
-        
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state)
-        {
-            float deltaTime = SystemAPI.Time.DeltaTime;
-            new RotatePickupJob { DeltaTime = deltaTime }.ScheduleParallel();
-        }
-    }
+//namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
+//{
+//    [UpdateInGroup(typeof(PauseableSystemGroup))]
+//    public partial struct RotateSystem : ISystem
+//    {
+//        [BurstCompile]
+//        public void OnCreate(ref SystemState state)
+//        {
+//            state.RequireForUpdate<RotateSystemAuthoring.RotateSystemIsEnabledTag>();
+//        }
 
-    [BurstCompile]
-    public partial struct RotatePickupJob : IJobEntity
-    {
-        public float DeltaTime;
-        
-        [BurstCompile]
-        private void Execute(ref LocalTransform transform, in RotateComponent rotateComponent)
-        {
-            transform = transform.Rotate(quaternion.Euler(rotateComponent.Direction * rotateComponent.Speed * DeltaTime));
-        }
-    }
-}
+//        [BurstCompile]
+//        public void OnUpdate(ref SystemState state)
+//        {
+//            float deltaTime = SystemAPI.Time.DeltaTime;
+//            var j = new RotatePickupJob { DeltaTime = deltaTime };
+//        }
+//    }
+
+//    [BurstCompile]
+//    public partial struct RotatePickupJob : IJobEntity
+//    {
+//        public float DeltaTime;
+
+//        [BurstCompile]
+//        private void Execute(ref LocalTransform transform, in RotateComponent rotateComponent)
+//        {
+//            transform = transform.Rotate(quaternion.Euler(rotateComponent.Direction * rotateComponent.Speed * DeltaTime));
+//        }
+//    }
+//}

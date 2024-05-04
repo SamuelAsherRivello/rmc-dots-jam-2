@@ -179,4 +179,4 @@ MonoBehaviour:
     m_Bits: 1024
   CollidesWithLayerMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 6144

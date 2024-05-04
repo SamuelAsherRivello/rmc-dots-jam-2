@@ -5,8 +5,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
     public class PlayerShootComponentAuthoring : MonoBehaviour
     {
-        public GameObject Prefab;
-        public float Speed = 10;
+        public GameObject BulletPrefab;
+        public float BulletSpeed = 10;
+        public float BulletFireRate = 10;
         
 		public class PlayerShootComponentAuthoringBaker : Baker<PlayerShootComponentAuthoring>
         {
@@ -16,8 +17,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                                 
 				AddComponent(entity, new PlayerShootComponent
 				{
-					Prefab = GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
-					Speed =  authoring.Speed
+					BulletPrefab = GetEntity(authoring.BulletPrefab, TransformUsageFlags.Dynamic),
+					BulletSpeed =  authoring.BulletSpeed,
+					BulletFireRate = authoring.BulletFireRate
 				});
 			}
         }

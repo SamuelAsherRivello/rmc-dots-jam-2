@@ -8,7 +8,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
+
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
@@ -18,70 +18,78 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     [UpdateInGroup(typeof(PauseableSystemGroup))]
     public partial struct PlayerShootSystem : ISystem
     {
-
-		public void OnCreate(ref SystemState state)
+        public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<InputComponent>();
-			state.RequireForUpdate<PlayerShootSystemAuthoring.PlayerShootSystemIsEnabledTag>();
-
-		}
+            state.RequireForUpdate<PlayerShootSystemAuthoring.PlayerShootSystemIsEnabledTag>();
+        }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-			var ecb = new EntityCommandBuffer(Allocator.TempJob);
+            var ecb = new EntityCommandBuffer(Allocator.TempJob);
 
-			// Accept spacebar or enter key
-			bool wasPressedThisFrameAction1 = SystemAPI.GetSingleton<InputComponent>().WasPressedThisFrameAction1;
-			bool wasPressedThisFrameAction2 = SystemAPI.GetSingleton<InputComponent>().WasPressedThisFrameAction2;
+            // Get the ArrowKeys for Look from the InputComponent. 
+            float2 look = SystemAPI.GetSingleton<InputComponent>().LookFloat2;
 
-			bool willShoot = wasPressedThisFrameAction1 || wasPressedThisFrameAction2;
+            // If look keys are not pressed, skip this iteration
+            if (math.length(look) < 0.0001f)
+            {
+                return;
+            }
 
-			if (willShoot)
-			{
+            foreach (var (playerShootComponent, localTransform) in SystemAPI.Query<RefRW<PlayerShootComponent>, LocalTransform>().WithAll<PlayerTag>())
+            {
+                // Check if the player can shoot based on the bullet fire rate
+                if (playerShootComponent.ValueRO._CanShoot)
+                {
+                    // Instantiate bullet entity
+                    var instanceEntity = ecb.Instantiate(playerShootComponent.ValueRO.BulletPrefab);
 
-				foreach (var (playerShootComponent, localTransform) in
-					SystemAPI.Query<RefRO <PlayerShootComponent>, LocalTransform>().WithAll<PlayerTag>())
-				{
-					var instanceEntity = ecb.Instantiate(playerShootComponent.ValueRO.Prefab);
+                    // Move to initial position
+                    ecb.SetComponent<LocalTransform>(instanceEntity, new LocalTransform
+                    {
+                        Position = localTransform.Position + -localTransform.Forward() * 1.5f, //'in front' of the eyes
+                        Rotation = quaternion.identity,
+                        Scale = 1
+                    });
 
+                    // Add physics velocity impulse component
+                    var bulletForce = -localTransform.Forward() * playerShootComponent.ValueRO.BulletSpeed;
+                    ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity, new PhysicsVelocityImpulseComponent
+                    {
+                        CanBeNegative = false,
+                        MinForce = bulletForce,
+                        MaxForce = bulletForce
+                    });
 
-					// Give a 'push' once in direction the player is facing
-					var bulletForce = -localTransform.Forward() * playerShootComponent.ValueRO.Speed;
-					var bulletForceNormalize = math.normalize(bulletForce);
+                    // Play sound
+                    var audioEntity = ecb.CreateEntity();
+                    ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
+                    {
+                        AudioClipName = "Click01"
+                    });
 
-					// Move to initial position
-					ecb.SetComponent<LocalTransform>(instanceEntity,
-						new LocalTransform
-							{
-								Position = localTransform.Position + bulletForceNormalize * 1.5f, //'in front' of the eyes
-								Rotation = quaternion.identity,
-								Scale = 1
-							});
+                    // Update shoot cooldown
+                    playerShootComponent.ValueRW._CanShoot = false;
+                    playerShootComponent.ValueRW._CooldownTimer = playerShootComponent.ValueRO.BulletFireRate;
+                }
+                else
+                {
+                    // Decrease cooldown timer
+                    playerShootComponent.ValueRW._CooldownTimer -= SystemAPI.Time.DeltaTime;
 
-					ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity,
-						new PhysicsVelocityImpulseComponent
-						{
-							//FYI Was designed for randomness
-							//Here, using it for non-randomness
-							CanBeNegative = false,
-							MinForce = bulletForce,
-							MaxForce = bulletForce,
-						});
-					
-					//Play sound
-					var audioEntity = ecb.CreateEntity();
-					ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
-					{
-						AudioClipName = "Click01"
-					});
+                    // Check if cooldown timer is over
+                    if (playerShootComponent.ValueRO._CooldownTimer <= 0)
+                    {
+                        // Reset can shoot flag
+                        playerShootComponent.ValueRW._CanShoot = true;
+                    }
+                }
+            }
 
-				}
-			}
-
-
-			ecb.Playback(state.EntityManager);
-
-		}
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
+        }
     }
 }

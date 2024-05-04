@@ -22,12 +22,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            // NOTE: First get the current input value from the InputComponent. 
-            // NOTE: Look will have values such as (-1, 0) for left, (1, 0) for right, (0, 1) for away from the camera, and (0, -1) for toward the camera
-            // as well as any combination of these values for diagonal directions, and any values between -1 and 0 or 0 and 1
+            // NOTE: First get the ArrowKeys for Look from the InputComponent. 
             float2 look = SystemAPI.GetSingleton<InputComponent>().LookFloat2;
             float3 lookComposite = new float3(look.x, 0, look.y);
-            
             float deltaTime = SystemAPI.Time.DeltaTime;
 
             foreach (var (rigidBodyAspect, playerFaceComponent)

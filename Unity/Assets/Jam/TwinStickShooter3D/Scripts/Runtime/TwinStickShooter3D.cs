@@ -94,7 +94,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             _common.MainUI.OnRestartConfirm.AddListener(MainUI_OnRestartConfirm);
             _common.MainUI.OnRestartCancel.AddListener(MainUI_OnRestartCancel);
 
-            _common.MainUI.StatusLabel.text = $"Use WASD/Arrows, Move\nSpace/Enter, Shoot";
+            _common.MainUI.StatusLabel.text = $"Use WASD to move\nArrows to shoot";
             _common.MainUI.RestartButton.text = "Restart";
 
             await InitializeAsync();

@@ -1,4 +1,5 @@
 ﻿using RMC.DOTS.SystemGroups;
+using RMC.DOTS.Systems.Audio;
 using RMC.DOTS.Systems.DestroyEntity;
 using RMC.DOTS.Systems.PhysicsTrigger;
 using Unity.Burst;
@@ -35,7 +36,14 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 in SystemAPI.Query<BulletTag, BulletWasHitTag>().
                 WithEntityAccess())
 			{
+	
 				DestroyEntitySystem.DestroyEntity(ref ecb, _destroyEntityComponentLookup, entity, 0);
+				
+				var audioEntity = ecb.CreateEntity();
+				ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
+				{
+					AudioClipName = "Click02"
+				});
 			}
 
 			////////////////////////////////

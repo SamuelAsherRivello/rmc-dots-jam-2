@@ -1,4 +1,5 @@
 ﻿using RMC.DOTS.SystemGroups;
+using RMC.DOTS.Systems.Audio;
 using RMC.DOTS.Systems.Input;
 using RMC.DOTS.Systems.PhysicsVelocityImpulse;
 using RMC.DOTS.Systems.Player;
@@ -58,8 +59,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 								Scale = 1
 							});
 
-
-
 					ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity,
 						new PhysicsVelocityImpulseComponent
 						{
@@ -69,6 +68,13 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 							MinForce = bulletForce,
 							MaxForce = bulletForce,
 						});
+					
+					//Play sound
+					var audioEntity = ecb.CreateEntity();
+					ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
+					{
+						AudioClipName = "Click01"
+					});
 
 				}
 			}

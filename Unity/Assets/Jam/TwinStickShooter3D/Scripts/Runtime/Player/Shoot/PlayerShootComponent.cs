@@ -2,23 +2,26 @@
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
+    /// <summary>
+    /// Contains all the data needed for the player to shoot via
+    /// <see cref="PlayerShootSystem"/>
+    /// </summary>
     public struct PlayerShootComponent : IComponentData
     {
-	    // Public variables for managing shooting
-		public Entity BulletPrefab;    // Prefab of the bullet entity
-		public float BulletSpeed;      // Speed of the bullet
-		public float BulletFireRate;   // Cooldown time between shots in seconds
+        // PUBLIC (Without "_"), Call directly
+        public readonly Entity BulletPrefab;    // Prefab of the bullet entity
+        public readonly float BulletSpeed;      // Speed of the bullet
+        public readonly float BulletFireRate;   // Cooldown time between shots in seconds
+        
+        // INTERNAL (With "_"), Do not call directly
+        public float _CooldownTimer;
 
-		// Internal variables (expressed as "_") for managing shooting cooldown
-		public bool _CanShoot;          // Flag indicating if the player can shoot
-		public float _CooldownTimer;    // Timer for the shooting cooldown
-
-		public static PlayerShootComponent Default => new PlayerShootComponent
-		{
-			BulletSpeed = 10f,         // Example default bullet speed
-			BulletFireRate = 0.5f,     // Example default fire rate (one shot every 0.5 seconds)
-			_CanShoot = true,           // Player can shoot initially
-			_CooldownTimer = 0f         // Initial cooldown timer set to zero
-		};
+        public PlayerShootComponent(Entity bulletPrefab, float bulletSpeed, float bulletFireRate)
+        {
+            BulletPrefab = bulletPrefab;
+            BulletSpeed = bulletSpeed;
+            BulletFireRate = bulletFireRate;
+            _CooldownTimer = -1;
+        }
     }
 }

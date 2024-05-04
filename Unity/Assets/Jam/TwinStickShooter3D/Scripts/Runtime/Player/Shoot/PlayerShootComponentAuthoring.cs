@@ -15,12 +15,14 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
                                 
-				AddComponent(entity, new PlayerShootComponent
-				{
-					BulletPrefab = GetEntity(authoring.BulletPrefab, TransformUsageFlags.Dynamic),
-					BulletSpeed =  authoring.BulletSpeed,
-					BulletFireRate = authoring.BulletFireRate
-				});
+                //NOTE: CONSTRUCTOR is used to specify the subset of values that is required
+				AddComponent(entity, new PlayerShootComponent 
+				(
+					GetEntity(authoring.BulletPrefab, 
+							TransformUsageFlags.Dynamic), 
+							authoring.BulletSpeed, 
+							authoring.BulletFireRate)
+				);
 			}
         }
     }

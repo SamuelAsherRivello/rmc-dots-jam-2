@@ -1,5 +1,6 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
@@ -13,11 +14,14 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         public Entity BulletPrefab => PlayerShootComponentRefRW.ValueRO.BulletPrefab;
         public float3 BulletSpeed => PlayerShootComponentRefRW.ValueRO.BulletSpeed;
         public float BulletFireRate => PlayerShootComponentRefRW.ValueRO.BulletFireRate;
-        
-        
+        public float3 Position => LocalTransformRefRW.ValueRO.Position;
+        public float3 Forward => LocalTransformRefRW.ValueRO.Forward();
+
+
         //  Fields ----------------------------------------
         readonly RefRW<PlayerShootComponent> PlayerShootComponentRefRW;
-
+        readonly RefRW<LocalTransform> LocalTransformRefRW;
+        
         
         //  Methods ---------------------------------------
         public bool CanShoot(float deltaTime)

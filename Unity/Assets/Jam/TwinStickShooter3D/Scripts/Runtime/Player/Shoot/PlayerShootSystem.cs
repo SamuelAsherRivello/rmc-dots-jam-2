@@ -38,8 +38,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 return;
             }
 
-            foreach (var (playerShootAspect, localTransform) 
-                     in SystemAPI.Query<PlayerShootAspect, LocalTransform>().WithAll<PlayerTag>())
+            foreach (var playerShootAspect 
+                     in SystemAPI.Query<PlayerShootAspect>().WithAll<PlayerTag>())
             {
                 // Check if the player can shoot based on the bullet fire rate
                 if (playerShootAspect.CanShoot(deltaTime))
@@ -50,13 +50,13 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     // Move to initial position
                     ecb.SetComponent<LocalTransform>(instanceEntity, new LocalTransform
                     {
-                        Position = localTransform.Position + -localTransform.Forward() * 1.5f, //'in front' of the eyes
+                        Position = playerShootAspect.Position + -playerShootAspect.Forward * 1.5f, //'in front' of the eyes
                         Rotation = quaternion.identity,
                         Scale = 1
                     });
 
                     // Add physics velocity impulse component
-                    var bulletForce = -localTransform.Forward() * playerShootAspect.BulletSpeed;
+                    var bulletForce = -playerShootAspect.Forward * playerShootAspect.BulletSpeed;
                     ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity, new PhysicsVelocityImpulseComponent
                     {
                         CanBeNegative = false,

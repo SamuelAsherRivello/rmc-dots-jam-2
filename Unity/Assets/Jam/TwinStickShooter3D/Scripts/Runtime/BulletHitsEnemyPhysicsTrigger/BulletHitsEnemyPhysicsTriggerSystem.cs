@@ -23,14 +23,21 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().
                 CreateCommandBuffer(state.WorldUnmanaged);
             
-            //Add new BulletWasHitTag
-            foreach (var (bulletTag, physicsTriggerOutputComponent, entity) 
-                     in SystemAPI.Query<BulletTag, PhysicsTriggerOutputComponent>().
-                         WithEntityAccess())
+            //BULLET
+            foreach (var (physicsTriggerOutputComponent, entity) 
+                     in SystemAPI.Query<PhysicsTriggerOutputComponent>().
+                         WithEntityAccess().WithNone<BulletWasHitTag>())
             {
-                //Debug.Log($"GamePickup ({entity.Index}) Set To Enter on TimeFrameCount: {Time.frameCount}");
-                //ecb.AddComponent<BulletWasHitTag>(entity);
+                ecb.AddComponent<BulletWasHitTag>(entity);
             }
-        }
+
+			//ENEMY
+			foreach (var (physicsTriggerOutputComponent, entity)
+					 in SystemAPI.Query<PhysicsTriggerOutputComponent>().
+						 WithEntityAccess().WithNone<EnemyWasHitTag>())
+			{
+				ecb.AddComponent<EnemyWasHitTag>(entity);
+			}
+		}
     }
 }

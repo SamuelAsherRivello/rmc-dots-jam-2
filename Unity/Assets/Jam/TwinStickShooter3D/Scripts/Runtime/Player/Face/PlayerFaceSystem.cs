@@ -1,10 +1,10 @@
 ﻿using RMC.DOTS.SystemGroups;
 using RMC.DOTS.Systems.Input;
-using RMC.DOTS.Systems.Player;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Physics;
+using Unity.Physics.Aspects;
+using UnityEngine;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
@@ -22,40 +22,42 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            // First get the current input value from the PlayerMoveInput component. This component is set in the
-            // GetPlayerInputSystem that runs earlier in the frame.
+            // NOTE: First get the current input value from the InputComponent. 
+            // NOTE: Look will have values such as (-1, 0) for left, (1, 0) for right, (0, 1) for away from the camera, and (0, -1) for toward the camera
+            // as well as any combination of these values for diagonal directions, and any values between -1 and 0 or 0 and 1
             float2 look = SystemAPI.GetSingleton<InputComponent>().LookFloat2;
+            float3 lookComposite = new float3(look.x, 0, look.y);
+            
             float deltaTime = SystemAPI.Time.DeltaTime;
 
-            float3 lookComposite = new float3(look.x, look.y, 0);
-
-            foreach (var (physicsVelocity, physicsMass, playerFaceComponent, playerTag) in
-                     SystemAPI.Query<RefRW<PhysicsVelocity>, PhysicsMass, PlayerFaceComponent, PlayerTag>())
+            foreach (var (rigidBodyAspect, playerFaceComponent)
+                in SystemAPI.Query<RigidBodyAspect, PlayerFaceComponent>())
             {
+                
+                // If lookComposite is zero or near zero, skip this iteration
+                if (math.lengthsq(lookComposite) < 0.0001f)
+                {
+                    return;
+                }
+                
+                // Calculate the angle of rotation
+                float angle = math.atan2(lookComposite.z, -lookComposite.x); // Invert the x component
 
-				// TODO: Add code here to slowly rotation by PlayerFaceComponent.Value as the speed
-				// Towards the direction of the lookComposite and use AngularSpeed or something to do it
-				if (!math.all(lookComposite.xy == float2.zero))
-				{
-					
-					float3 currentDirection = new float3(0, 0, 0); // Assuming facing forward initially.
-					quaternion currentRotation = quaternion.LookRotationSafe(currentDirection, math.up());
-					quaternion targetRotation = quaternion.LookRotationSafe(lookComposite, math.up());
+                // Add a 90 degrees offset to the angle
+                angle += math.radians(90);
 
-					// Calculate the step size for rotation
-					float step = playerFaceComponent.Value * deltaTime;
+                // Create a quaternion from the angle
+                quaternion targetRotation = quaternion.EulerXYZ(new float3(0, angle, 0));
 
-					// Slerp between the current and target rotation
-					quaternion slerpedRotation = math.slerp(currentRotation, targetRotation, step);
+                // Get the current rotation of the player
+                quaternion currentRotation = rigidBodyAspect.Rotation;
 
-					// Convert quaternion to euler angles in radians and then to degrees
-					float3 euler = math.degrees(math.Euler(slerpedRotation));
+                // Interpolate between the current rotation and the target rotation
+                quaternion newRotation = math.slerp(currentRotation, targetRotation, playerFaceComponent.Value * deltaTime);
 
-					// Set the angular velocity towards target rotation
-					physicsVelocity.ValueRW.Angular = euler;
-				}
-			}
-
-		}
+                // Set the new rotation of the player
+                rigidBodyAspect.Rotation = newRotation;
+            }
+        }
     }
 }

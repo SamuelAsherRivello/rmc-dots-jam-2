@@ -67,9 +67,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 Debug.Log($"LayerMask failed. Must set Layer {playerIndexRequired} to be '{playerName}'.");
             }
             
-            var goalName = "Goal";
+            var goalName = "Enemy";
             var goalIndexCurrent = LayerMask.NameToLayer(goalName);
-            var goalIndexRequired = 9;
+            var goalIndexRequired = 11;
 
             if (goalIndexCurrent != goalIndexRequired)
             {
@@ -94,7 +94,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             _common.MainUI.OnRestartConfirm.AddListener(MainUI_OnRestartConfirm);
             _common.MainUI.OnRestartCancel.AddListener(MainUI_OnRestartCancel);
 
-            _common.MainUI.StatusLabel.text = $"Use Arrow Keys";
+            _common.MainUI.StatusLabel.text = $"Use WASD/Arrows, Move\nSpace/Enter, Shoot";
             _common.MainUI.RestartButton.text = "Restart";
 
             await InitializeAsync();

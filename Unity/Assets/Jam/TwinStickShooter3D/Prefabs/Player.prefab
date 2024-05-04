@@ -130,9 +130,9 @@ MonoBehaviour:
       z: 0
     RotationOrder: 4
   m_InertiaTensor:
-    x: Infinity
+    x: 9999
     y: 0.4
-    z: Infinity
+    z: 9999
   m_WorldIndex: 0
   m_CustomTags:
     Tag00: 0
@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af46c130ab9193e4aa7b9a8f561fa2d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 50
+  Speed: 25
 --- !u!114 &3180639386447641451
 MonoBehaviour:
   m_ObjectHideFlags: 0

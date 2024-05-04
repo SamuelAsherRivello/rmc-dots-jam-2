@@ -33,7 +33,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             _localTransformLookup.Update(ref state);
 
             var playerEntities = state.EntityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<LocalTransform>(),
+                //ComponentType.ReadOnly<LocalTransform>(),
                 ComponentType.ReadOnly<PlayerTag>()).ToEntityArray(Allocator.Temp);
 
             float3 currentPlayerPosition = float3.zero;

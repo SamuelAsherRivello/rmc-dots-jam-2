@@ -10,6 +10,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         public Entity Prefab;
         public Vector3 SpawnPosition;
         public float SpawnIntervalInSeconds;
+        public float InitialMoveSpeed;
 
         public float TimeLeftTillSpawnInSeconds;
     }

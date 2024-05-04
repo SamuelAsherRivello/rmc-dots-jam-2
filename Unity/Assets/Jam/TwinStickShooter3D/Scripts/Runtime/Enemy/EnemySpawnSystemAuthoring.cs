@@ -15,6 +15,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     {
         public GameObject Prefab;
 
+        public float InitialMoveSpeed = 6.0f;
         public float SpawnIntervalInSeconds = 1.0f;
 
         public class EnemySpawnerSystemAuthoringBaker : Baker<EnemySpawnSystemAuthoring>
@@ -27,6 +28,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     Prefab = GetEntity(systemAuthoring.Prefab, TransformUsageFlags.Dynamic),
                     SpawnPosition = systemAuthoring.transform.position,
                     SpawnIntervalInSeconds = systemAuthoring.SpawnIntervalInSeconds,
+                    InitialMoveSpeed = systemAuthoring.InitialMoveSpeed,
 
                     TimeLeftTillSpawnInSeconds = systemAuthoring.SpawnIntervalInSeconds,
                 });

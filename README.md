@@ -1,12 +1,11 @@
-# RMC DOTS JAM
+# RMC DOTS JAM 2
 
-Starting point to game jam using the RMC DOTS Library.
+Starting point to game jam using the RMC DOTS Library available at [GitHub.com/SamuelAsherRivello/rmc-dots/](https://github.com/SamuelAsherRivello/rmc-dots/)
 
 # Configuration
 
 **Documentation**
 * `ReadMe.md` - The primary documentation for this repo
-* `Unity/Assets/Documentation/ReadMe.asset` - Select this asset in Unity to get started
 
 **Configuration**
 * `Unity Target` - [Standalone MAC/PC](https://support.unity.com/hc/en-us/articles/206336795-What-platforms-are-supported-by-Unity-)

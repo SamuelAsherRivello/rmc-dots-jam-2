@@ -803,7 +803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a33226757140f1b69655eade115707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScoreMax: 3
+  ScoreMax: 0
 --- !u!4 &1659833553
 Transform:
   m_ObjectHideFlags: 0

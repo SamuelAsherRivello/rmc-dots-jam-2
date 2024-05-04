@@ -163,10 +163,10 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             _common.MainUI.ScoreLabel.text = 
                 $"Score: {scoringComponent.ScoreComponent01.ScoreCurrent}/{scoringComponent.ScoreComponent01.ScoreMax}";
             
-            if (scoringComponent.ScoreComponent01.ScoreCurrent >= scoringComponent.ScoreComponent01.ScoreMax)
-            {
-                _gameStateSystem.GameState = GameState.GameEnded;
-            }
+            // if (scoringComponent.ScoreComponent01.ScoreCurrent >= scoringComponent.ScoreComponent01.ScoreMax)
+            // {
+            //     _gameStateSystem.GameState = GameState.GameEnded;
+            // }
         }
         
         private void MainUI_OnRestartRequest()

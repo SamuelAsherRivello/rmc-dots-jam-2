@@ -23,8 +23,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            // First get the current input value from the PlayerMoveInput component. This component is set in the
-            // GetPlayerInputSystem that runs earlier in the frame.
             float2 move = SystemAPI.GetSingleton<InputComponent>().MoveFloat2;
             float deltaTime = SystemAPI.Time.DeltaTime;
             float2 moveComposite = float2.zero;

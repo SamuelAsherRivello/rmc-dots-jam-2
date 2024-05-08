@@ -45,7 +45,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 state.EntityManager.SetComponentData(newEntity, LocalTransform.FromPosition(enemySpawnComponent.ValueRO.SpawnPosition));
                 state.EntityManager.SetComponentData(newEntity, newEnemyMoveComponent);
 
-                enemySpawnComponent.ValueRW.NextSpawnTime = SystemAPI.Time.ElapsedTime + 1000.0f;
+                enemySpawnComponent.ValueRW.NextSpawnTime = SystemAPI.Time.ElapsedTime + enemySpawnComponent.ValueRO.SpawnIntervalInSeconds;
 
                 // Add to POSSIBLE points for each enemy
                 scoringComponent.ScoreComponent01.ScoreMax += 1;

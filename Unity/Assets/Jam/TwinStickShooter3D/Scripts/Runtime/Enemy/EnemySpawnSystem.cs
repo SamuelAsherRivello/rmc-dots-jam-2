@@ -10,6 +10,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEditor.U2D;
 using UnityEngine;
+using RMC.DOTS.Systems.Player;
+using RMC.DOTS.Systems.Random;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
@@ -17,6 +19,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     [BurstCompile]
     public partial struct EnemySpawnSystem : ISystem
     {
+        private ComponentLookup<LocalTransform> _localTransformLookup;
+
         public void OnDestroy(ref SystemState state) { }
 
         [BurstCompile]
@@ -24,16 +28,24 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         {
             state.RequireForUpdate<EnemySpawnComponent>();
             state.RequireForUpdate<ScoringComponent>();
+            _localTransformLookup = state.GetComponentLookup<LocalTransform>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            _localTransformLookup.Update(ref state);
+            var playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
+            float3 currentPlayerPosition = _localTransformLookup[playerEntity].Position;
+
             var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             var beginSimulationECB = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
             ScoringComponent scoringComponent = SystemAPI.GetSingleton<ScoringComponent>();
             var deltaTime = SystemAPI.Time.DeltaTime;
+
+            var randomComponentEntity = SystemAPI.GetSingletonEntity<RandomComponent>();
+            var randomComponentAspect = SystemAPI.GetAspect<RandomComponentAspect>(randomComponentEntity);
 
             foreach (var enemySpawnComponent in SystemAPI.Query<RefRW<EnemySpawnComponent>>())
             {
@@ -45,8 +57,18 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     enemySpawnComponent.ValueRO.InitialTurnSpeed
                 );
 
+                float2 randomVectorOnGround = math.normalizesafe(new float2(
+                    randomComponentAspect.NextFloat(-1.0f, 1.0f),
+                    randomComponentAspect.NextFloat(-1.0f, 1.0f)
+                )) * enemySpawnComponent.ValueRO.SpawnDistanceToPlayer;
+                
+                const float spawnHeight = 4.0f;
+                float3 spawnVector = new float3(randomVectorOnGround.x, spawnHeight, randomVectorOnGround.y);
+
+                float3 newEnemyPosition = currentPlayerPosition + spawnVector;
+
                 Entity newEntity = beginSimulationECB.Instantiate(enemySpawnComponent.ValueRO.Prefab);
-                beginSimulationECB.SetComponent(newEntity, LocalTransform.FromPosition(enemySpawnComponent.ValueRO.SpawnPosition));
+                beginSimulationECB.SetComponent(newEntity, LocalTransform.FromPosition(newEnemyPosition));
                 beginSimulationECB.SetComponent(newEntity, newEnemyMoveComponent);
                 
                 enemySpawnComponent.ValueRW.NextSpawnTime = SystemAPI.Time.ElapsedTime + enemySpawnComponent.ValueRO.SpawnIntervalInSeconds;

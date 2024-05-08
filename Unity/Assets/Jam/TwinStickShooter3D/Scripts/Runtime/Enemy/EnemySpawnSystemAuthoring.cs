@@ -16,6 +16,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     {
         public GameObject Prefab;
 
+        public float SpawnDistanceToPlayer = 10.0f;
         public float InitialMoveSpeed = 4.0f;
         public float InitialTurnSpeed = 1.5f;
         public float SpawnIntervalInSeconds = 1.0f;
@@ -27,7 +28,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 var entity = GetEntity(TransformUsageFlags.None);
                 AddComponent(entity, new EnemySpawnComponent(
                     GetEntity(systemAuthoring.Prefab, TransformUsageFlags.Dynamic),
-                    systemAuthoring.transform.position,
+                    systemAuthoring.SpawnDistanceToPlayer,
                     systemAuthoring.SpawnIntervalInSeconds,
                     systemAuthoring.InitialMoveSpeed,
                     systemAuthoring.InitialTurnSpeed,

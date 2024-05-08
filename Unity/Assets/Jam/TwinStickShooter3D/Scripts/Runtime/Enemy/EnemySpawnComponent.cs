@@ -9,7 +9,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     public struct EnemySpawnComponent : IComponentData
     {
         public Entity Prefab;
-        public float3 SpawnPosition;
+        public float SpawnDistanceToPlayer;
         public float SpawnIntervalInSeconds;
         public float InitialMoveSpeed;
         public float InitialTurnSpeed;
@@ -18,14 +18,14 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
         public EnemySpawnComponent(
             Entity newPrefab,
-            float3 newSpawnPosition,
+            float newSpawnDistanceToPlayer,
             float newSpawnIntervalInSeconds,
             float newInitialMoveSpeed,
             float newInitialTurnSpeed,
             double newNextSpawnTime)
         {
             Prefab = newPrefab;
-            SpawnPosition = newSpawnPosition;
+            SpawnDistanceToPlayer = newSpawnDistanceToPlayer;
             SpawnIntervalInSeconds = newSpawnIntervalInSeconds;
             InitialMoveSpeed = newInitialMoveSpeed;
             InitialTurnSpeed = newInitialTurnSpeed;

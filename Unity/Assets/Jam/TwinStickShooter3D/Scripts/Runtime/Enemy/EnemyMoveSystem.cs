@@ -35,10 +35,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         public void OnUpdate(ref SystemState state)
         {
             _localTransformLookup.Update(ref state);
-
-            //var playerEntity = SystemAPI.GetSingleton<PlayerTag>();
-            //float3 currentPlayerPosition = playerEntity;
-
+            
             var playerEntities = state.EntityManager.CreateEntityQuery(ComponentType.ReadOnly<PlayerTag>()).ToEntityArray(Allocator.Temp);
 
             float3 currentPlayerPosition = float3.zero;
@@ -53,7 +50,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                      SystemAPI.Query<RefRW<PhysicsVelocity>, RefRW<LocalTransform>, PhysicsMass, EnemyMoveComponent>().WithAll<EnemyTag>())
             {
                 float3 enemyToPlayer = currentPlayerPosition - localTransform.ValueRO.Position;
-                enemyToPlayer = math.normalize(enemyToPlayer);
+                enemyToPlayer = math.normalizesafe(enemyToPlayer);
 
                 physicsVelocity.ValueRW.ApplyLinearImpulse(in physicsMass, deltaTime * enemyMoveComponent.MoveSpeed * enemyToPlayer);
 

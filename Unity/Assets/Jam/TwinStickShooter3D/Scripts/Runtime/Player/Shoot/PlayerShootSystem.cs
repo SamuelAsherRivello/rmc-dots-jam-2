@@ -27,7 +27,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var ecb = new EntityCommandBuffer(Allocator.TempJob);
+            var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+            var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
             // Get the ArrowKeys for Look from the InputComponent. 
             float2 look = SystemAPI.GetSingleton<InputComponent>().LookFloat2;
@@ -76,9 +77,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     playerShootAspect.ResetShootCooldown(playerShootAspect.BulletFireRate);
                 }
             }
-
-            ecb.Playback(state.EntityManager);
-            ecb.Dispose();
         }
     }
 }

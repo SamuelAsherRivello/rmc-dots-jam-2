@@ -29,6 +29,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+            var beginSimulationECB = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+
             ScoringComponent scoringComponent = SystemAPI.GetSingleton<ScoringComponent>();
             var deltaTime = SystemAPI.Time.DeltaTime;
 
@@ -37,14 +40,15 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 if (SystemAPI.Time.ElapsedTime < enemySpawnComponent.ValueRW.NextSpawnTime)
                     continue;
 
-                EnemyMoveComponent newEnemyMoveComponent = new EnemyMoveComponent();
-                newEnemyMoveComponent.MoveSpeed = enemySpawnComponent.ValueRO.InitialMoveSpeed;
-                newEnemyMoveComponent.TurnSpeed = enemySpawnComponent.ValueRO.InitialTurnSpeed;
+                EnemyMoveComponent newEnemyMoveComponent = new EnemyMoveComponent(
+                    enemySpawnComponent.ValueRO.InitialMoveSpeed,
+                    enemySpawnComponent.ValueRO.InitialTurnSpeed
+                );
 
-                Entity newEntity = state.EntityManager.Instantiate(enemySpawnComponent.ValueRO.Prefab);
-                state.EntityManager.SetComponentData(newEntity, LocalTransform.FromPosition(enemySpawnComponent.ValueRO.SpawnPosition));
-                state.EntityManager.SetComponentData(newEntity, newEnemyMoveComponent);
-
+                Entity newEntity = beginSimulationECB.Instantiate(enemySpawnComponent.ValueRO.Prefab);
+                beginSimulationECB.SetComponent(newEntity, LocalTransform.FromPosition(enemySpawnComponent.ValueRO.SpawnPosition));
+                beginSimulationECB.SetComponent(newEntity, newEnemyMoveComponent);
+                
                 enemySpawnComponent.ValueRW.NextSpawnTime = SystemAPI.Time.ElapsedTime + enemySpawnComponent.ValueRO.SpawnIntervalInSeconds;
 
                 // Add to POSSIBLE points for each enemy

@@ -32,9 +32,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         {
             _localTransformLookup.Update(ref state);
 
-            var playerEntities = state.EntityManager.CreateEntityQuery(
-                //ComponentType.ReadOnly<LocalTransform>(),
-                ComponentType.ReadOnly<PlayerTag>()).ToEntityArray(Allocator.Temp);
+            var playerEntities = state.EntityManager.CreateEntityQuery(ComponentType.ReadOnly<PlayerTag>()).ToEntityArray(Allocator.Temp);
 
             float3 currentPlayerPosition = float3.zero;
             foreach (var playerEntity in playerEntities)
@@ -44,12 +42,16 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
             float deltaTime = SystemAPI.Time.DeltaTime;
 
-            foreach (var (physicsVelocity, physicsMass, enemyMoveComponent, localTransform) in
-                     SystemAPI.Query<RefRW<PhysicsVelocity>, PhysicsMass, EnemyMoveComponent, LocalTransform>().WithAll<EnemyTag>())
+            foreach (var (physicsVelocity, localTransform, physicsMass, enemyMoveComponent) in
+                     SystemAPI.Query<RefRW<PhysicsVelocity>, RefRW<LocalTransform>, PhysicsMass, EnemyMoveComponent>().WithAll<EnemyTag>())
             {
-                float3 enemyToPlayer = currentPlayerPosition - localTransform.Position;
+                float3 enemyToPlayer = currentPlayerPosition - localTransform.ValueRO.Position;
                 enemyToPlayer = math.normalize(enemyToPlayer);
+
                 physicsVelocity.ValueRW.ApplyLinearImpulse(in physicsMass, deltaTime * enemyMoveComponent.MoveSpeed * enemyToPlayer);
+
+                quaternion targetRotation = quaternion.EulerXYZ(new float3(0.0f, math.atan2(enemyToPlayer.x, enemyToPlayer.z), 0.0f));
+                localTransform.ValueRW.Rotation = math.slerp(localTransform.ValueRO.Rotation, targetRotation, enemyMoveComponent.TurnSpeed * deltaTime);
             }
         }
     }

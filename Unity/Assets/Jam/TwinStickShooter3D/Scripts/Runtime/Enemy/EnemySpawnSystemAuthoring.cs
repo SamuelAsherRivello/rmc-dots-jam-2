@@ -1,3 +1,4 @@
+using PlasticPipe.Client;
 using RMC.DOTS.Systems.Spawn;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     {
         public GameObject Prefab;
 
-        public float InitialMoveSpeed = 6.0f;
+        public float InitialMoveSpeed = 4.0f;
+        public float InitialTurnSpeed = 1.5f;
         public float SpawnIntervalInSeconds = 1.0f;
 
         public class EnemySpawnerSystemAuthoringBaker : Baker<EnemySpawnSystemAuthoring>
@@ -23,15 +25,14 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             public override void Bake(EnemySpawnSystemAuthoring systemAuthoring)
             {
                 var entity = GetEntity(TransformUsageFlags.None);
-                AddComponent(entity, new EnemySpawnComponent
-                {
-                    Prefab = GetEntity(systemAuthoring.Prefab, TransformUsageFlags.Dynamic),
-                    SpawnPosition = systemAuthoring.transform.position,
-                    SpawnIntervalInSeconds = systemAuthoring.SpawnIntervalInSeconds,
-                    InitialMoveSpeed = systemAuthoring.InitialMoveSpeed,
-
-                    TimeLeftTillSpawnInSeconds = systemAuthoring.SpawnIntervalInSeconds,
-                });
+                AddComponent(entity, new EnemySpawnComponent(
+                    GetEntity(systemAuthoring.Prefab, TransformUsageFlags.Dynamic),
+                    systemAuthoring.transform.position,
+                    systemAuthoring.SpawnIntervalInSeconds,
+                    systemAuthoring.InitialMoveSpeed,
+                    systemAuthoring.InitialTurnSpeed,
+                    World.DefaultGameObjectInjectionWorld.Time.ElapsedTime + systemAuthoring.SpawnIntervalInSeconds
+                ));
             }
         }
     }

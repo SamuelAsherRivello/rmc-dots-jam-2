@@ -97,7 +97,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             // Populate UI
             RefreshWaveProgressLabel();
             ScoresEventSystem_OnScoresChanged(default(ScoringComponent));
-            _common.MainUI.StatusLabel.text = $"Use WASD to move\nArrows to shoot";
+            _common.MainUI.StatusLabel.text = $"WASD to move\nArrows to shoot";
             _common.MainUI.RestartButton.text = "Restart";
             _common.MainUI.WaveTitleLabel.text = "";
             await InitializeAsync();
@@ -122,7 +122,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         
         private void RefreshWaveProgressLabel()
         {
-            _common.MainUI.WaveProgressLabel.text = $"Enemies {_enemyKillsThisRoundCurrent}/{_enemyKillsThisRoundMax}";
+            _common.MainUI.WaveProgressLabel.text = $"Enemies {_enemyKillsThisRoundCurrent} / {_enemyKillsThisRoundMax}";
         }
 
 

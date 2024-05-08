@@ -29,14 +29,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            // Check GameStateComponent
-            GameStateComponent gameStateComponent = SystemAPI.GetSingleton<GameStateComponent>();
-            if (gameStateComponent.GameState != GameState.RoundStarted)
-            {
-                return;
-            }
-            
-            
             var ecb = SystemAPI.
                 GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().
                 CreateCommandBuffer(state.WorldUnmanaged);

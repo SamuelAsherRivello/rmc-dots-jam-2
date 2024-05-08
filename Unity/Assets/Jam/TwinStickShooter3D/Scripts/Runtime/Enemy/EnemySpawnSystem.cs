@@ -120,7 +120,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 //Set difficulty
                 var useThis = gameStateComponent.RoundData.RoundCurrent;
                 var andOrThis = gameStateComponent.RoundData.RoundMax;
-                Debug.Log($"EnemySpawnSystem. Increase Difficulty with {useThis} or {andOrThis}.");
+                Debug.Log($"EnemySpawnSystem. TODO: Set Difficulty via {useThis}/{andOrThis}.");
             }
         }
 

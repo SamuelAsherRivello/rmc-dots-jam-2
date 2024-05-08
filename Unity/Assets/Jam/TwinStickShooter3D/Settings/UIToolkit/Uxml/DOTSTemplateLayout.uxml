@@ -3,14 +3,14 @@
     <ui:VisualElement name="Screen" class="screen">
         <ui:VisualElement name="Content" class="content">
             <ui:VisualElement name="UpperLeft" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 0; top: 0;">
-                <ui:Label tabindex="-1" text="W" display-tooltip-when-elided="true" name="WaveProgressLabel" />
-                <ui:Label tabindex="-1" text="S" display-tooltip-when-elided="true" name="ScoreLabel" />
+                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="WaveProgressLabel" />
+                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="ScoreLabel" />
             </ui:VisualElement>
             <ui:VisualElement name="UpperRight" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); right: 0; top: 0; position: absolute;">
-                <ui:Label tabindex="-1" text="S" display-tooltip-when-elided="true" name="StatusLabel" style="-unity-text-align: upper-right;" />
+                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="StatusLabel" style="-unity-text-align: upper-right;" />
             </ui:VisualElement>
             <ui:VisualElement name="Center" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); right: auto; top: 10%; position: relative;">
-                <ui:Label tabindex="-1" text="W" display-tooltip-when-elided="true" name="WaveTitleLabel" style="-unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="WaveTitleLabel" style="-unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
             </ui:VisualElement>
             <ui:VisualElement name="LowerRight" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); right: 0; position: absolute; bottom: 0;">
                 <ui:Button text="Restart" display-tooltip-when-elided="true" name="RestartButton" />

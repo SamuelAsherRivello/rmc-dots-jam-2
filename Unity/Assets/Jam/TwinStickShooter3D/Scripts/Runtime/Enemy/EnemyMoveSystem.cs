@@ -23,7 +23,11 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            //state.RequireForUpdate<EnemyTag>();
+            state.RequireForUpdate<EnemyTag>();
+            state.RequireForUpdate<EnemyMoveComponent>();
+            state.RequireForUpdate<LocalTransform>();
+            state.RequireForUpdate<PhysicsMass>();
+            state.RequireForUpdate<PhysicsVelocity>();
             _localTransformLookup = state.GetComponentLookup<LocalTransform>();
         }
 
@@ -31,6 +35,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         public void OnUpdate(ref SystemState state)
         {
             _localTransformLookup.Update(ref state);
+
+            //var playerEntity = SystemAPI.GetSingleton<PlayerTag>();
+            //float3 currentPlayerPosition = playerEntity;
 
             var playerEntities = state.EntityManager.CreateEntityQuery(ComponentType.ReadOnly<PlayerTag>()).ToEntityArray(Allocator.Temp);
 

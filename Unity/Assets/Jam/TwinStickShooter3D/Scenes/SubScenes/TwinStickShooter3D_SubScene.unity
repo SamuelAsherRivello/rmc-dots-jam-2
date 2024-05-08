@@ -550,6 +550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 8758394213842003315, guid: 22fd8d2ec7e0495429b67053d5b16a65, type: 3}
+  InitialMoveSpeed: 1
   SpawnIntervalInSeconds: 2
 --- !u!4 &747642746
 Transform:
@@ -863,7 +864,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae7dacca4aca1754382d73d1cb91666e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsSystemEnabled: 1
 --- !u!1 &1723019268
 GameObject:
   m_ObjectHideFlags: 0

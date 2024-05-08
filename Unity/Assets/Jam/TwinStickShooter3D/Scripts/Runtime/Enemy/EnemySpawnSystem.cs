@@ -31,16 +31,19 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         {
             ScoringComponent scoringComponent = SystemAPI.GetSingleton<ScoringComponent>();
             var deltaTime = SystemAPI.Time.DeltaTime;
-         
-            
+
             foreach (var enemySpawnComponent in SystemAPI.Query<RefRW<EnemySpawnComponent>>())
             {
                 enemySpawnComponent.ValueRW.TimeLeftTillSpawnInSeconds -= deltaTime;
                 if (enemySpawnComponent.ValueRW.TimeLeftTillSpawnInSeconds > 0.0f)
                     continue;
 
+                EnemyMoveComponent newEnemyMoveComponent = new EnemyMoveComponent();
+                newEnemyMoveComponent.MoveSpeed = enemySpawnComponent.ValueRO.InitialMoveSpeed;
+
                 Entity newEntity = state.EntityManager.Instantiate(enemySpawnComponent.ValueRO.Prefab);
                 state.EntityManager.SetComponentData(newEntity, LocalTransform.FromPosition(enemySpawnComponent.ValueRO.SpawnPosition));
+                state.EntityManager.SetComponentData(newEntity, newEnemyMoveComponent);
 
                 enemySpawnComponent.ValueRW.TimeLeftTillSpawnInSeconds = enemySpawnComponent.ValueRO.SpawnIntervalInSeconds;
                 

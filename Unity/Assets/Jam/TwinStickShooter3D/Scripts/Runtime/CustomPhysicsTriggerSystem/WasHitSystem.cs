@@ -24,7 +24,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 	    
 	    //  Fields ----------------------------------------
 	    private ComponentLookup<DestroyEntityComponent> _destroyEntityComponentLookup;
-	    private ComponentLookup<GemWasCollectedTag> _gemWasCollectedTagLookup;
+	    private ComponentLookup<GemWasDestroyed> _gemWasCollectedTagLookup;
 	    
 	    
 	    //  Unity Methods  --------------------------------
@@ -36,7 +36,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             RequireForUpdate<GameStateComponent>();
             
             _destroyEntityComponentLookup = GetComponentLookup<DestroyEntityComponent>();
-            _gemWasCollectedTagLookup = GetComponentLookup<GemWasCollectedTag>();
+            _gemWasCollectedTagLookup = GetComponentLookup<GemWasDestroyed>();
         }
 		
         protected override void OnUpdate()
@@ -49,21 +49,15 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
 	        _destroyEntityComponentLookup.Update(this);
 			_gemWasCollectedTagLookup.Update(this);
-
-			bool didDestroyEnemy = false;
 			
 			////////////////////////////////
 			// GEM
 			////////////////////////////////
 			foreach (var (gemTag, gemWasHitTag, entity)
 			         in SystemAPI.Query<GemTag, GemWasHitTag>().
-				         WithNone<GemWasCollectedTag>().
+				         WithNone<GemWasDestroyed>().
 				         WithEntityAccess())
 			{
-				
-				//HACK: Why do I need this to properly limit this local scope to run once?
-				ecb.AddComponent<GemWasCollectedTag>(entity);
-				
 				scoringComponent.ScoreComponent01.ScoreCurrent += 1;
 					
 				var audioEntity = ecb.CreateEntity();
@@ -75,6 +69,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 				// Destroy the Gem
 				DestroyEntitySystem.DestroyEntity(ref ecb, _destroyEntityComponentLookup, entity);
 				OnWasHit?.Invoke(typeof(GemTag), true);
+				
+				//HACK: Why do I need this to properly limit this local scope to run once?
+				ecb.AddComponent<GemWasDestroyed>(entity);
 					
 			}
 
@@ -84,12 +81,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 			////////////////////////////////
 			foreach (var (enemyTag, enemyWasHitTag, localTransform, gemDropComponent, entity)
 				in SystemAPI.Query<EnemyTag, EnemyWasHitTag, LocalTransform, GemDropComponent>().
-					WithNone<GemWasCreatedTag>().
+					WithNone<EnemyWasDestroyed>().
 				WithEntityAccess())
 			{
-				
-				//HACK: Why do I need this to properly limit this local scope to run once?
-				ecb.AddComponent<GemWasCreatedTag>(entity);
 
 				// Instantiate the entity
 				var instanceEntity = ecb.Instantiate(gemDropComponent.GemPrefab);
@@ -105,7 +99,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 				// Destroy the enemy
 				DestroyEntitySystem.DestroyEntity(ref ecb, _destroyEntityComponentLookup, entity);
 				OnWasHit?.Invoke(typeof(EnemyTag), true);
-				didDestroyEnemy = true;
+				
+				//HACK: Why do I need this to properly limit this local scope to run once?
+				ecb.AddComponent<EnemyWasDestroyed>(entity);
 			}
 			
 			
@@ -114,23 +110,22 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 			////////////////////////////////
 			foreach (var (bulletTag, bulletWasHitTag, entity) 
 			         in SystemAPI.Query<BulletTag, BulletWasHitTag>().
+				         WithNone<BulletWasDestroyed>().
 				         WithEntityAccess())
 			{
 
-				// HANDLE: Enemy
-				// HACK: Use bool to avoid double-hit. Not sure why I need this boolean.
-				if (didDestroyEnemy)
+				var audioEntity = ecb.CreateEntity();
+				ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
 				{
-					var audioEntity = ecb.CreateEntity();
-					ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
-					{
-						AudioClipName = "Click02"
-					});
-				}
+					AudioClipName = "Click02"
+				});
 				
 				// HANDLE: Bullet
 				DestroyEntitySystem.DestroyEntity(ref ecb, _destroyEntityComponentLookup, entity);
 				OnWasHit?.Invoke(typeof(BulletTag), true);
+				
+				//HACK: Why do I need this to properly limit this local scope to run once?
+				ecb.AddComponent<BulletWasDestroyed>(entity);
 
 			}
 			

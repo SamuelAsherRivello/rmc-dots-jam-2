@@ -7,6 +7,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics.Aspects;
 using Unity.Transforms;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
@@ -44,10 +45,10 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 // Check if the player can shoot based on the bullet fire rate
                 if (playerShootAspect.CanShoot(deltaTime))
                 {
-                    // Instantiate bullet entity
+                    // Instantiate the entity
                     var instanceEntity = ecb.Instantiate(playerShootAspect.BulletPrefab);
-
-                    // Move to initial position
+                    
+                    // Move entity to initial position
                     ecb.SetComponent<LocalTransform>(instanceEntity, new LocalTransform
                     {
                         Position = playerShootAspect.Position + -playerShootAspect.Forward * 1.5f, //'in front' of the eyes
@@ -55,7 +56,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                         Scale = 1
                     });
 
-                    // Add physics velocity impulse component
+                    // Push entity once
                     var bulletForce = -playerShootAspect.Forward * playerShootAspect.BulletSpeed;
                     ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity, new PhysicsVelocityImpulseComponent
                     {

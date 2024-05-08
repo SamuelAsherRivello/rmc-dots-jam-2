@@ -1,5 +1,6 @@
 ﻿using RMC.DOTS.SystemGroups;
 using RMC.DOTS.Systems.Audio;
+using RMC.DOTS.Systems.GameState;
 using RMC.DOTS.Systems.Input;
 using RMC.DOTS.Systems.PhysicsVelocityImpulse;
 using RMC.DOTS.Systems.Player;
@@ -22,11 +23,21 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         {
             state.RequireForUpdate<InputComponent>();
             state.RequireForUpdate<PlayerShootSystemAuthoring.PlayerShootSystemIsEnabledTag>();
+            state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
+            state.RequireForUpdate<GameStateComponent>();
         }
-
+		
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            // Check GameStateComponent
+            GameStateComponent gameStateComponent = SystemAPI.GetSingleton<GameStateComponent>();
+            if (gameStateComponent.GameState != GameState.RoundStarted)
+            {
+                return;
+            }
+            
+            
             var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 

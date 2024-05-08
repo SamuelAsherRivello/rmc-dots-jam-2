@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WillDestroy: 1
-  TimeTillDestroyInSeconds: 0.7
+  TimeTillDestroyInSeconds: 2
 --- !u!114 &-521184423817781190
 MonoBehaviour:
   m_ObjectHideFlags: 0

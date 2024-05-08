@@ -16,8 +16,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             {
                 if (authoring.IsSystemEnabled)
                 {
-                    Entity inputEntity = GetEntity(TransformUsageFlags.Dynamic);
-                    AddComponent<RotateSystemIsEnabledTag>(inputEntity);
+                    Entity entity = GetEntity(TransformUsageFlags.Dynamic);
+                    AddComponent<RotateSystemIsEnabledTag>(entity);
                 }
             }
         }

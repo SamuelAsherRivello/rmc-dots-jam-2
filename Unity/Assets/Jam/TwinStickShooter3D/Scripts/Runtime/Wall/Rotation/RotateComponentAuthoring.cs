@@ -11,18 +11,18 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
         public class RotateComponentAuthoringBaker : Baker<RotateComponentAuthoring>
         {
-            public override void Bake(RotateComponentAuthoring componentAuthoring)
+            public override void Bake(RotateComponentAuthoring authoring)
             {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new RotateComponent
                 {
                     Direction = new float3
                     {
-                        x = math.radians(componentAuthoring.Direction.x),
-                        y = math.radians(componentAuthoring.Direction.y),
-                        z = math.radians(componentAuthoring.Direction.z)
+                        x = math.radians(authoring.Direction.x),
+                        y = math.radians(authoring.Direction.y),
+                        z = math.radians(authoring.Direction.z)
                     }, 
-                    Speed = componentAuthoring.Speed
+                    Speed = authoring.Speed
                 });
             }
         }

@@ -3,6 +3,7 @@ using RMC.DOTS.Systems.Input;
 using RMC.DOTS.Systems.Player;
 using System.Collections;
 using System.Collections.Generic;
+using RMC.DOTS.Systems.GameState;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -29,11 +30,18 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             state.RequireForUpdate<PhysicsMass>();
             state.RequireForUpdate<PhysicsVelocity>();
             _localTransformLookup = state.GetComponentLookup<LocalTransform>();
+            state.RequireForUpdate<GameStateComponent>();
         }
-
-        [BurstCompile]
+		
         public void OnUpdate(ref SystemState state)
         {
+            // Check GameStateComponent
+            GameStateComponent gameStateComponent = SystemAPI.GetSingleton<GameStateComponent>();
+            if (gameStateComponent.GameState != GameState.RoundStarted)
+            {
+                return;
+            }
+
             _localTransformLookup.Update(ref state);
             
             var playerEntities = state.EntityManager.CreateEntityQuery(ComponentType.ReadOnly<PlayerTag>()).ToEntityArray(Allocator.Temp);

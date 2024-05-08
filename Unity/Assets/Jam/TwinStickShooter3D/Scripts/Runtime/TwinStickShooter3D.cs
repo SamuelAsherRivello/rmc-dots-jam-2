@@ -1,5 +1,7 @@
+using System;
 using System.Threading.Tasks;
 using RMC.Audio;
+using RMC.Core.Utilities;
 using RMC.DOTS.Systems.GameState;
 using RMC.DOTS.Systems.Scoring;
 using RMC.DOTS.Utilities;
@@ -47,34 +49,28 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [SerializeField] 
         private SubScene _subScene;
 
+        [Tooltip("True, to show debug logs")]
         [SerializeField] 
-        private bool IsDebug = false;
+        private bool IsDebugLog = false;
+
+        [Tooltip("True, to show faster UI")]
+        [SerializeField] 
+        private bool IsDebugWaves = false;
 
         private GameStateSystem _gameStateSystem;
-
         private World _ecsWorld;
+        private ScoringSystem _scoringSystem;
+        private int _enemyKillsThisRoundCurrent;
+        private int _enemyKillsThisRoundMax;
 
         //  Unity Methods  --------------------------------
         protected async void Start()
         {
-            //Make sure the project has layers set properly
-            var playerName = "Player";
-            var playerIndexCurrent = LayerMask.NameToLayer(playerName);
-            var playerIndexRequired = 6;
-
-            if (playerIndexCurrent != playerIndexRequired)
-            {
-                Debug.Log($"LayerMask failed. Must set Layer {playerIndexRequired} to be '{playerName}'.");
-            }
-            
-            var goalName = "Enemy";
-            var goalIndexCurrent = LayerMask.NameToLayer(goalName);
-            var goalIndexRequired = 11;
-
-            if (goalIndexCurrent != goalIndexRequired)
-            {
-                Debug.Log($"LayerMask failed. Must set Layer {goalIndexRequired} to be '{goalName}'.");
-            }
+            // The Unity Project Must Have These Layers
+            // LayerMaskUtility Shows Errors If Anything Is Missing
+            LayerMaskUtility.AssertLayerMask("Player", 6);
+            LayerMaskUtility.AssertLayerMask("Enemy", 11);
+            LayerMaskUtility.AssertLayerMask("Gem", 13);
             
             // ECS
             _ecsWorld = await DOTSUtility.GetWorldAsync(_subScene);
@@ -85,20 +81,29 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             _gameStateSystem.OnIsGamePausedChanged += GameStateSystem_OnIsGamePausedChanged;
             _gameStateSystem.OnGameStateChanged += GameStateSystem_OnGameStateChanged;
 
+            // Enemy Killed
+            WasHitSystem wasHitSystem = _ecsWorld.GetExistingSystemManaged<WasHitSystem>();
+            wasHitSystem.OnWasHit += WasHitSystem_OnWasHit;
+            
             // Scoring
-            ScoringSystem scoringSystem = _ecsWorld.GetExistingSystemManaged<ScoringSystem>();
-            scoringSystem.OnScoringComponentChanged += ScoresEventSystem_OnScoresChanged;
-
+            _scoringSystem = _ecsWorld.GetExistingSystemManaged<ScoringSystem>();
+            _scoringSystem.OnScoringComponentChanged += ScoresEventSystem_OnScoresChanged;
+            
             // UI
             _common.MainUI.OnRestartRequest.AddListener(MainUI_OnRestartRequest);
             _common.MainUI.OnRestartConfirm.AddListener(MainUI_OnRestartConfirm);
             _common.MainUI.OnRestartCancel.AddListener(MainUI_OnRestartCancel);
-
+            
+            // Populate UI
+            RefreshWaveProgressLabel();
+            ScoresEventSystem_OnScoresChanged(default(ScoringComponent));
             _common.MainUI.StatusLabel.text = $"Use WASD to move\nArrows to shoot";
             _common.MainUI.RestartButton.text = "Restart";
-
+            _common.MainUI.WaveTitleLabel.text = "";
             await InitializeAsync();
         }
+
+  
 
         protected void OnDestroy()
         {
@@ -111,27 +116,97 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         {
             //TODO: Is this still needed? (Gamestate singleton not found without this code)
             await Task.Delay(300);
-
-            _gameStateSystem.GameState = GameState.Initialized;
+     
+            _gameStateSystem.GameState = GameState.Initializing;
+        }
+        
+        private void RefreshWaveProgressLabel()
+        {
+            _common.MainUI.WaveProgressLabel.text = $"Enemies {_enemyKillsThisRoundCurrent}/{_enemyKillsThisRoundMax}";
         }
 
 
         //  Event Handlers --------------------------------
-        private void GameStateSystem_OnGameStateChanged(GameState gameState)
+        private async void GameStateSystem_OnGameStateChanged(GameState gameState)
         {
-            if (IsDebug)
+            if (IsDebugLog)
             {
                 Debug.Log($"OnGameStateChanged() gameState = {gameState}");
             }
             
             switch (gameState)
             {
+                case GameState.Initializing:
+                    _gameStateSystem.GameState = GameState.Initialized;
+         
+                    break;
                 case GameState.Initialized:
+                    _gameStateSystem.GameState = GameState.GameStarting;
+                    break;
+  
+                case GameState.GameStarting: 
+                    
+                    _gameStateSystem.IsGamePaused = false;
+                    _gameStateSystem.IsGameOver = false;
+                    
+                    _gameStateSystem.RoundData = new RoundData
+                    {
+                        RoundCurrent = 0,
+                        RoundMax = 3
+                    };
+                    
                     _gameStateSystem.GameState = GameState.GameStarted;
                     break;
                 case GameState.GameStarted: 
-                    _gameStateSystem.IsGamePaused = false;
-                    _gameStateSystem.IsGameOver = false;
+                    _gameStateSystem.GameState = GameState.RoundStarting;
+                    break;
+                case GameState.RoundStarting: 
+                    _gameStateSystem.RoundData = new RoundData
+                    {
+                        RoundCurrent = _gameStateSystem.RoundData.RoundCurrent + 1,
+                        RoundMax = _gameStateSystem.RoundData.RoundMax
+                    };
+                    
+                    // Increase difficulty
+                    _enemyKillsThisRoundCurrent = 0;
+                    _enemyKillsThisRoundMax = 1 * _gameStateSystem.RoundData.RoundCurrent;
+                    RefreshWaveProgressLabel();
+                    
+                    // Faster waves when debugging
+                    float waveDelay = IsDebugWaves ? 0.1f : 1f;
+                    int delayBeforeTextLine1 = (int)(300 * waveDelay);
+                    int delayBeforeTextLine2 = (int)(500 * waveDelay);
+                    int delayAfterText = (int)(2000 * waveDelay);
+                    
+                    try
+                    {
+                        // Show wave line 1
+                        await Task.Delay(delayBeforeTextLine1, destroyCancellationToken);
+                        _common.MainUI.WaveTitleLabel.text = $"Wave {_gameStateSystem.RoundData.RoundCurrent} " +
+                                                        $"of {_gameStateSystem.RoundData.RoundMax}";
+                        
+                        // Show wave line 2
+                        await Task.Delay(delayBeforeTextLine2, destroyCancellationToken);
+                        _common.MainUI.WaveTitleLabel.text = $"Wave {_gameStateSystem.RoundData.RoundCurrent} " +
+                                                        $"of {_gameStateSystem.RoundData.RoundMax}\n"+
+                                                        $"Kill {_enemyKillsThisRoundMax} Enemies!";
+                        
+                        // Clear wave lines
+                        await Task.Delay(delayAfterText, destroyCancellationToken);
+                        _common.MainUI.WaveTitleLabel.text = "";
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        return;
+                    }
+                    
+                    _gameStateSystem.GameState = GameState.RoundStarted;
+                    break;
+                case GameState.RoundStarted: 
+                    // The core game is played here...
+                    break;
+                case GameState.GameEnding: 
+                    _gameStateSystem.GameState = GameState.GameEnded;
                     break;
                 case GameState.GameEnded: 
                     _gameStateSystem.IsGameOver = true;
@@ -157,17 +232,38 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             IsEnabledSimulationSystemGroup = !isGamePaused;;
         }
         
+        
+        private void WasHitSystem_OnWasHit(Type t, bool wasDestroyed)
+        {
+            if (t == typeof(EnemyTag) && wasDestroyed)
+            {
+                _enemyKillsThisRoundCurrent++;
+            }
+
+            if (_enemyKillsThisRoundCurrent >= _enemyKillsThisRoundMax)
+            {
+                _gameStateSystem.GameState = GameState.RoundStarting;
+            }
+            
+            RefreshWaveProgressLabel();
+        }
+
 
         private void ScoresEventSystem_OnScoresChanged(ScoringComponent scoringComponent)
         {
-            _common.MainUI.ScoreLabel.text = 
-                $"Score: {scoringComponent.ScoreComponent01.ScoreCurrent}/{scoringComponent.ScoreComponent01.ScoreMax}";
+            var gemsCurrent = 0;
+            var gemsMax = 0;
             
-            // if (scoringComponent.ScoreComponent01.ScoreCurrent >= scoringComponent.ScoreComponent01.ScoreMax)
-            // {
-            //     _gameStateSystem.GameState = GameState.GameEnded;
-            // }
+            if (!scoringComponent.Equals(default(ScoringComponent)))
+            {
+                gemsCurrent = scoringComponent.ScoreComponent01.ScoreCurrent;
+                gemsMax = scoringComponent.ScoreComponent01.ScoreMax;
+            }
+
+            _common.MainUI.ScoreLabel.text =
+                     $"Gems: {gemsCurrent}"; //Don't show "/gemsMax" anymore?
         }
+        
         
         private void MainUI_OnRestartRequest()
         {

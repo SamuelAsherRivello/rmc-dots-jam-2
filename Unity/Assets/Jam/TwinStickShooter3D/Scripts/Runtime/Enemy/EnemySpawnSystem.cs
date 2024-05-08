@@ -1,17 +1,14 @@
+using System;
 using RMC.DOTS.SystemGroups;
-using RMC.DOTS.Systems.Spawn;
-using System.Collections;
-using System.Collections.Generic;
+using RMC.DOTS.Systems.GameState;
 using RMC.DOTS.Systems.Scoring;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEditor.U2D;
 using UnityEngine;
 using RMC.DOTS.Systems.Player;
 using RMC.DOTS.Systems.Random;
+using Unity.Mathematics;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
@@ -19,21 +16,52 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     [BurstCompile]
     public partial struct EnemySpawnSystem : ISystem
     {
+        //  Fields ----------------------------------------
         private ComponentLookup<LocalTransform> _localTransformLookup;
 
-        public void OnDestroy(ref SystemState state) { }
-
-        [BurstCompile]
+        //  Unity Methods  --------------------------------
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<EnemySpawnComponent>();
             state.RequireForUpdate<ScoringComponent>();
+            state.RequireForUpdate<GameStateComponent>();
             _localTransformLookup = state.GetComponentLookup<LocalTransform>();
+            
+            GameStateSystem gameStateSystem = state.World.GetExistingSystemManaged<GameStateSystem>();
+            gameStateSystem.OnGameStateChanged += GameStateSystem_OnGameStateChanged;
         }
 
+        
+        /// <summary>
+        /// Unity does not like me calling this when the scene ends
+        /// TODO: Un-listen here or just skip this?
+        /// Yes, if this system alone is destroyed?
+        /// or NO, if the whole game is destroyed?
+        /// </summary>
+        public void OnDestroy(ref SystemState state)
+        {
+            try
+            {
+                GameStateSystem gameStateSystem = state.World.GetExistingSystemManaged<GameStateSystem>();
+                gameStateSystem.OnGameStateChanged -= GameStateSystem_OnGameStateChanged;
+            }
+            catch (Exception)
+            {
+                //Debug.Log($"EnemySpawnSystem. OnDestroy Error: {e.Message}");
+            }   
+        }
+
+        
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            // Check GameStateComponent
+            GameStateComponent gameStateComponent = SystemAPI.GetSingleton<GameStateComponent>();
+            if (gameStateComponent.GameState != GameState.RoundStarted)
+            {
+                return;
+            }
+
             _localTransformLookup.Update(ref state);
             var playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
             float3 currentPlayerPosition = _localTransformLookup[playerEntity].Position;
@@ -77,8 +105,24 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 scoringComponent.ScoreComponent01.ScoreMax += 1;
             }
             
-            
             SystemAPI.SetSingleton<ScoringComponent>(scoringComponent);
         }
+        
+        //  Methods ---------------------------------------
+
+
+        //  Event Handlers --------------------------------
+        private void GameStateSystem_OnGameStateChanged(GameState gameState)
+        {
+            GameStateComponent gameStateComponent = SystemAPI.GetSingleton<GameStateComponent>();
+            if (gameStateComponent.GameState == GameState.RoundStarted)
+            {
+                //Set difficulty
+                var useThis = gameStateComponent.RoundData.RoundCurrent;
+                var andOrThis = gameStateComponent.RoundData.RoundMax;
+                Debug.Log($"EnemySpawnSystem. Increase Difficulty with {useThis} or {andOrThis}.");
+            }
+        }
+
     }
 }

@@ -23,16 +23,21 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
         public class EnemySpawnerSystemAuthoringBaker : Baker<EnemySpawnSystemAuthoring>
         {
-            public override void Bake(EnemySpawnSystemAuthoring systemAuthoring)
+            public override void Bake(EnemySpawnSystemAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.None);
+
+                // NOTE: This fails after clicking 'Restart' Button. Known issue. Use something else.
+                //var elapsedTime = World.DefaultGameObjectInjectionWorld.Time.ElapsedTime
+                var elapsedTime = Time.time; //workaround
+                
                 AddComponent(entity, new EnemySpawnComponent(
-                    GetEntity(systemAuthoring.Prefab, TransformUsageFlags.Dynamic),
-                    systemAuthoring.SpawnDistanceToPlayer,
-                    systemAuthoring.SpawnIntervalInSeconds,
-                    systemAuthoring.InitialMoveSpeed,
-                    systemAuthoring.InitialTurnSpeed,
-                    World.DefaultGameObjectInjectionWorld.Time.ElapsedTime + systemAuthoring.SpawnIntervalInSeconds
+                    GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
+                    authoring.SpawnDistanceToPlayer,
+                    authoring.SpawnIntervalInSeconds,
+                    authoring.InitialMoveSpeed,
+                    authoring.InitialTurnSpeed,
+                    elapsedTime + authoring.SpawnIntervalInSeconds
                 ));
             }
         }

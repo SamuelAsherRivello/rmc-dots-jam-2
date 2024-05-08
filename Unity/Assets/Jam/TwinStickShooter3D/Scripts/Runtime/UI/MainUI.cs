@@ -21,6 +21,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         //  Properties ------------------------------------
         public Label ScoreLabel { get { return _uiDocument?.rootVisualElement?.Q<Label>("ScoreLabel");} }
         public Label StatusLabel { get { return _uiDocument?.rootVisualElement?.Q<Label>("StatusLabel");} }
+        public Label WaveTitleLabel { get { return _uiDocument?.rootVisualElement?.Q<Label>("WaveTitleLabel");} }
+        public Label WaveProgressLabel { get { return _uiDocument?.rootVisualElement?.Q<Label>("WaveProgressLabel");} }
         public Button RestartButton { get { return _uiDocument?.rootVisualElement?.Q<Button>("RestartButton");} }
 
         //  Fields ----------------------------------------

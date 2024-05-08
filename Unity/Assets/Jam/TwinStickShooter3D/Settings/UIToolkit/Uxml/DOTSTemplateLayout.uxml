@@ -2,13 +2,17 @@
     <Style src="project://database/Assets/Jam/TwinStickShooter3D/Settings/UIToolkit/Uss/DOTSTemplateStyles.uss?fileID=7433441132597879392&amp;guid=87b0d55bffc47a34d8b559a3ebe557a4&amp;type=3#DOTSTemplateStyles" />
     <ui:VisualElement name="Screen" class="screen">
         <ui:VisualElement name="Content" class="content">
-            <ui:VisualElement name="Score" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 0; top: 0;">
-                <ui:Label tabindex="-1" text="Score" display-tooltip-when-elided="true" name="ScoreLabel" />
+            <ui:VisualElement name="UpperLeft" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 0; top: 0;">
+                <ui:Label tabindex="-1" text="W" display-tooltip-when-elided="true" name="WaveProgressLabel" />
+                <ui:Label tabindex="-1" text="S" display-tooltip-when-elided="true" name="ScoreLabel" />
             </ui:VisualElement>
-            <ui:VisualElement name="Status" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); right: 0; top: 0; position: absolute;">
-                <ui:Label tabindex="-1" text="Status" display-tooltip-when-elided="true" name="StatusLabel" style="-unity-text-align: upper-right;" />
+            <ui:VisualElement name="UpperRight" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); right: 0; top: 0; position: absolute;">
+                <ui:Label tabindex="-1" text="S" display-tooltip-when-elided="true" name="StatusLabel" style="-unity-text-align: upper-right;" />
             </ui:VisualElement>
-            <ui:VisualElement name="Restart" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); right: 0; position: absolute; bottom: 0;">
+            <ui:VisualElement name="Center" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); right: auto; top: 10%; position: relative;">
+                <ui:Label tabindex="-1" text="W" display-tooltip-when-elided="true" name="WaveTitleLabel" style="-unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="LowerRight" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); right: 0; position: absolute; bottom: 0;">
                 <ui:Button text="Restart" display-tooltip-when-elided="true" name="RestartButton" />
             </ui:VisualElement>
         </ui:VisualElement>

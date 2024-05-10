@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8951316720332013134}
   - component: {fileID: 6908328053074414839}
   - component: {fileID: 2083537987363122719}
-  - component: {fileID: -3212025073503809422}
+  - component: {fileID: -701842677391348566}
   m_Layer: 0
   m_Name: Gem
   m_TagString: Untagged
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0033e5cca1134f5ba31e9b1aeb60d2ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-3212025073503809422
+--- !u!114 &-701842677391348566
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -205,6 +205,6 @@ MonoBehaviour:
   TargetsLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  AngularSpeed: 10
-  LinearSpeed: 20
-  Radius: 4
+  AngularSpeed: 5
+  LinearSpeed: 15
+  Radius: 5

@@ -80,9 +80,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     // Play sound
                     var audioEntity = ecb.CreateEntity();
                     ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
-                    {
-                        AudioClipName = "Click01"
-                    });
+                    (
+                        "Click01"
+                    ));
 
                     // Update shoot cooldown
                     playerShootAspect.ResetShootCooldown(playerShootAspect.BulletFireRate);

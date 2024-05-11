@@ -62,9 +62,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 					
 				var audioEntity = ecb.CreateEntity();
 				ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
-				{
-					AudioClipName = "Pickup01"
-				});
+				(
+					"Pickup01"
+				));
 				
 				// Destroy the Gem
 				DestroyEntitySystem.DestroyEntity(ref ecb, _destroyEntityComponentLookup, entity);
@@ -116,9 +116,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
 				var audioEntity = ecb.CreateEntity();
 				ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
-				{
-					AudioClipName = "Click02"
-				});
+				(
+					"Click02"
+				));
 				
 				// HANDLE: Bullet
 				DestroyEntitySystem.DestroyEntity(ref ecb, _destroyEntityComponentLookup, entity);

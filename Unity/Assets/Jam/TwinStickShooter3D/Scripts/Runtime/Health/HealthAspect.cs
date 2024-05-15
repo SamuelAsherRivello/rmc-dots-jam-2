@@ -13,7 +13,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
         public void DealDamage(float damage)
         {
-            Debug.Log($"Dealing damage={damage} to CurrentHealth={CurrentHealth}");
+            //Debug.Log($"Dealing damage={damage} to CurrentHealth={CurrentHealth}");
             HealthComponent.ValueRW.CurrentHealth = math.max(0.0f, HealthComponent.ValueRW.CurrentHealth - damage);
         }
 

@@ -37,26 +37,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         {
             GameStateComponent gameStateComponent = SystemAPI.GetSingleton<GameStateComponent>();
 
-            if (gameStateComponent.GameState != GameState.RoundStarted)
-            {
-                var ecb = SystemAPI.GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().
-                    CreateCommandBuffer(state.WorldUnmanaged);
-
-                foreach (var followerComponent in SystemAPI.Query<RefRW<FollowerComponent>>().WithAll<EnemyTag>())
-                {
-                    followerComponent.ValueRW.IsEnabled = false;
-                }
-            }
-            else
-            {
-                var ecb = SystemAPI.GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().
-                    CreateCommandBuffer(state.WorldUnmanaged);
-
-                foreach (var followerComponent in SystemAPI.Query<RefRW<FollowerComponent>>().WithAll<EnemyTag>())
-                {
-                    followerComponent.ValueRW.IsEnabled = true;
-                }
-            }
+            bool enable = gameStateComponent.GameState == GameState.RoundStarted;
+            foreach (var followerComponent in SystemAPI.Query<RefRW<FollowerComponent>>().WithAll<EnemyTag>())
+                followerComponent.ValueRW.IsEnabled = enable;
         }
     }
 }

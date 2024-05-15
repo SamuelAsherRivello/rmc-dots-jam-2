@@ -54,7 +54,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 			// GEM
 			////////////////////////////////
 			foreach (var (gemTag, gemWasHitTag, entity)
-			         in SystemAPI.Query<GemTag, GemWasHitTag>().
+			         in SystemAPI.Query<GemTag, GemWasHitThisFrameTag>().
 				         WithNone<GemWasDestroyed>().
 				         WithEntityAccess())
 			{
@@ -80,7 +80,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 			// ENEMY
 			////////////////////////////////
 			foreach (var (enemyTag, enemyWasHitTag, localTransform, gemDropComponent, entity)
-				in SystemAPI.Query<EnemyTag, EnemyWasHitTag, LocalTransform, GemDropComponent>().
+				in SystemAPI.Query<EnemyTag, EnemyWasHitThisFrameTag, LocalTransform, GemDropComponent>().
 					WithNone<EnemyWasDestroyed>().
 				WithEntityAccess())
 			{
@@ -109,7 +109,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 			// BULLET
 			////////////////////////////////
 			foreach (var (bulletTag, bulletWasHitTag, entity) 
-			         in SystemAPI.Query<BulletTag, BulletWasHitTag>().
+			         in SystemAPI.Query<BulletTag, BulletWasHitThisFrameTag>().
 				         WithNone<BulletWasDestroyed>().
 				         WithEntityAccess())
 			{

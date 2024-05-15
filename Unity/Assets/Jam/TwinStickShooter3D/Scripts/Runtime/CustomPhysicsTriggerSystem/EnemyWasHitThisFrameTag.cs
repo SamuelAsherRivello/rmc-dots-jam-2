@@ -2,6 +2,6 @@
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
-    public struct GemWasHitTag : IComponentData {}
+    public struct EnemyWasHitThisFrameTag : IComponentData {}
     
 }

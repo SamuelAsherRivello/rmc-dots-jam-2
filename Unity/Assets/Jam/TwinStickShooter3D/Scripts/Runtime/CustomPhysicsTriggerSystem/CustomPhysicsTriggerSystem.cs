@@ -33,41 +33,71 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().
                 CreateCommandBuffer(state.WorldUnmanaged);
             
-            //GEM
+            
+            //////////////////////////////////////
+            //GEM - REMOVE
             foreach (var (physicsTriggerOutputComponent, entity) 
                      in SystemAPI.Query<RefRO<PhysicsTriggerOutputComponent>>().
-                         WithEntityAccess().WithAll<GemTag>().WithNone<GemWasHitTag>())
+                         WithEntityAccess().WithAll<GemTag, GemWasHitThisFrameTag>())
             {
-                if (physicsTriggerOutputComponent.ValueRO.PhysicsTriggerType == PhysicsTriggerType.Enter &&
-                    physicsTriggerOutputComponent.ValueRO.TimeFrameCountForLastCollision == Time.frameCount)
-                {
-                    ecb.AddComponent<GemWasHitTag>(entity);
-                }
-            
+                ecb.RemoveComponent<GemWasHitThisFrameTag>(entity);
             }
+
             
-            
-            //BULLET
+            //GEM - ADD
             foreach (var (physicsTriggerOutputComponent, entity) 
                      in SystemAPI.Query<RefRO<PhysicsTriggerOutputComponent>>().
-                         WithEntityAccess().WithAll<BulletTag>().WithNone<BulletWasHitTag>())
+                         WithEntityAccess().WithAll<GemTag>().WithNone<GemWasHitThisFrameTag>())
             {
                 if (physicsTriggerOutputComponent.ValueRO.PhysicsTriggerType == PhysicsTriggerType.Enter &&
                     physicsTriggerOutputComponent.ValueRO.TimeFrameCountForLastCollision == Time.frameCount)
                 {
-                    ecb.AddComponent<BulletWasHitTag>(entity);
+                    ecb.AddComponent<GemWasHitThisFrameTag>(entity);
                 }
             }
 
-			//ENEMY
+
+            //////////////////////////////////////
+            //BULLET - REMOVE
+            foreach (var (physicsTriggerOutputComponent, entity) 
+                     in SystemAPI.Query<RefRO<PhysicsTriggerOutputComponent>>().
+                         WithEntityAccess().WithAll<BulletTag, BulletWasHitThisFrameTag>())
+            {
+                ecb.RemoveComponent<BulletWasHitThisFrameTag>(entity);
+            }
+
+            
+            //BULLET - ADD
+            foreach (var (physicsTriggerOutputComponent, entity) 
+                     in SystemAPI.Query<RefRO<PhysicsTriggerOutputComponent>>().
+                         WithEntityAccess().WithAll<BulletTag>().WithNone<BulletWasHitThisFrameTag>())
+            {
+                if (physicsTriggerOutputComponent.ValueRO.PhysicsTriggerType == PhysicsTriggerType.Enter &&
+                    physicsTriggerOutputComponent.ValueRO.TimeFrameCountForLastCollision == Time.frameCount)
+                {
+                    ecb.AddComponent<BulletWasHitThisFrameTag>(entity);
+                }
+            }
+
+            //////////////////////////////////////
+            //BULLET - REMOVE
+            foreach (var (physicsTriggerOutputComponent, entity) 
+                     in SystemAPI.Query<RefRO<PhysicsTriggerOutputComponent>>().
+                         WithEntityAccess().WithAll<EnemyTag, EnemyWasHitThisFrameTag>())
+            {
+                ecb.RemoveComponent<EnemyWasHitThisFrameTag>(entity);
+            }
+
+            
+            //BULLET - ADD
 			foreach (var (physicsTriggerOutputComponent, entity)
 					 in SystemAPI.Query<RefRO<PhysicsTriggerOutputComponent>>().
-						 WithEntityAccess().WithAll<EnemyTag>().WithNone<EnemyWasHitTag>())
+						 WithEntityAccess().WithAll<EnemyTag>().WithNone<EnemyWasHitThisFrameTag>())
 			{
                 if (physicsTriggerOutputComponent.ValueRO.PhysicsTriggerType == PhysicsTriggerType.Enter &&
                     physicsTriggerOutputComponent.ValueRO.TimeFrameCountForLastCollision == Time.frameCount)
                 {
-                    ecb.AddComponent<EnemyWasHitTag>(entity);
+                    ecb.AddComponent<EnemyWasHitThisFrameTag>(entity);
                 }
             }
 		}

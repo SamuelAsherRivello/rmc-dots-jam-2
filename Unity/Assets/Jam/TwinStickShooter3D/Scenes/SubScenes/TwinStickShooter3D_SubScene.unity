@@ -668,8 +668,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1022204936}
+  - component: {fileID: 1022204937}
   m_Layer: 0
-  m_Name: ------- Specific Instances -------
+  m_Name: --------- Instances ----------
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -694,6 +695,19 @@ Transform:
   - {fileID: 8054685656664284095}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1022204937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022204935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4bd367752a957644a1419fad5d66606, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DividerType: 3
 --- !u!4 &1102876038 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 645407843221631725, guid: a1bd441edf8f09c4da06808f49601c86,
@@ -775,8 +789,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1465897715}
+  - component: {fileID: 1465897716}
   m_Layer: 0
-  m_Name: ------- Specific Systems -------
+  m_Name: ---------- Systems -----------
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -803,6 +818,19 @@ Transform:
   - {fileID: 443433945}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1465897716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465897714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4bd367752a957644a1419fad5d66606, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DividerType: 2
 --- !u!1 &1592965419
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,8 +840,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1592965420}
+  - component: {fileID: 1592965421}
   m_Layer: 0
-  m_Name: ------- Shared Systems --------
+  m_Name: ------- SharedSystems --------
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -843,6 +872,19 @@ Transform:
   - {fileID: 1659833553}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1592965421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592965419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4bd367752a957644a1419fad5d66606, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DividerType: 1
 --- !u!1 &1659833551
 GameObject:
   m_ObjectHideFlags: 0

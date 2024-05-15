@@ -8,6 +8,9 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Extensions;
 using Unity.Transforms;
+using RMC.DOTS.Systems.FollowTarget;
+using UnityEditor.SceneManagement;
+using UnityEngine;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
@@ -16,6 +19,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
     public partial struct EnemyMoveSystem : ISystem
     {
         private ComponentLookup<LocalTransform> _localTransformLookup;
+        private LayerMask _layerMask;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -31,35 +35,27 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 		
         public void OnUpdate(ref SystemState state)
         {
-            // Check GameStateComponent
             GameStateComponent gameStateComponent = SystemAPI.GetSingleton<GameStateComponent>();
+
             if (gameStateComponent.GameState != GameState.RoundStarted)
             {
-                return;
+                var ecb = SystemAPI.GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().
+                    CreateCommandBuffer(state.WorldUnmanaged);
+
+                foreach (var followerComponent in SystemAPI.Query<RefRW<FollowerComponent>>().WithAll<EnemyTag>())
+                {
+                    followerComponent.ValueRW.IsEnabled = false;
+                }
             }
-
-            _localTransformLookup.Update(ref state);
-            
-            var playerEntities = state.EntityManager.CreateEntityQuery(ComponentType.ReadOnly<PlayerTag>()).ToEntityArray(Allocator.Temp);
-
-            float3 currentPlayerPosition = float3.zero;
-            foreach (var playerEntity in playerEntities)
+            else
             {
-                currentPlayerPosition = _localTransformLookup[playerEntity].Position;
-            }
+                var ecb = SystemAPI.GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().
+                    CreateCommandBuffer(state.WorldUnmanaged);
 
-            float deltaTime = SystemAPI.Time.DeltaTime;
-
-            foreach (var (physicsVelocity, localTransform, physicsMass, enemyMoveComponent) in
-                     SystemAPI.Query<RefRW<PhysicsVelocity>, RefRW<LocalTransform>, PhysicsMass, EnemyMoveComponent>().WithAll<EnemyTag>())
-            {
-                float3 enemyToPlayer = currentPlayerPosition - localTransform.ValueRO.Position;
-                enemyToPlayer = math.normalizesafe(enemyToPlayer);
-
-                physicsVelocity.ValueRW.ApplyLinearImpulse(in physicsMass, deltaTime * enemyMoveComponent.MoveSpeed * enemyToPlayer);
-
-                quaternion targetRotation = quaternion.EulerXYZ(new float3(0.0f, math.atan2(enemyToPlayer.x, enemyToPlayer.z), 0.0f));
-                localTransform.ValueRW.Rotation = math.slerp(localTransform.ValueRO.Rotation, targetRotation, enemyMoveComponent.TurnSpeed * deltaTime);
+                foreach (var followerComponent in SystemAPI.Query<RefRW<FollowerComponent>>().WithAll<EnemyTag>())
+                {
+                    followerComponent.ValueRW.IsEnabled = true;
+                }
             }
         }
     }

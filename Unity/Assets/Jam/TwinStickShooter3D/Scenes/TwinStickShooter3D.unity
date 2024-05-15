@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _common: {fileID: 1362546962}
   _subScene: {fileID: 1345535642}
+  _totalWaves: 3
   IsDebugLog: 0
   IsDebugWaves: 0
 --- !u!1 &1345535641

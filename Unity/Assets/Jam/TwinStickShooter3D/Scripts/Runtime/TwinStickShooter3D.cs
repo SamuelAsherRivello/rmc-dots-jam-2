@@ -49,6 +49,11 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [SerializeField] 
         private SubScene _subScene;
 
+        [Header("Difficulty")] 
+        [SerializeField]
+        private int _totalWaves = 3;
+            
+        [Header("Debug")]
         [Tooltip("True, to show debug logs")]
         [SerializeField] 
         private bool IsDebugLog = false;
@@ -62,7 +67,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         private ScoringSystem _scoringSystem;
         private int _enemyKillsThisRoundCurrent;
         private int _enemyKillsThisRoundMax;
-
+        private readonly int _delayAfterTextInMilliseconds = 2000;
+        
         //  Unity Methods  --------------------------------
         protected async void Start()
         {
@@ -152,7 +158,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     _gameStateSystem.RoundData = new RoundData
                     {
                         RoundCurrent = 0,
-                        RoundMax = 3
+                        RoundMax = _totalWaves
                     };
                     
                     _gameStateSystem.GameState = GameState.GameStarted;
@@ -173,26 +179,26 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     RefreshWaveProgressLabel();
                     
                     // Faster waves when debugging
-                    float waveDelay = IsDebugWaves ? 0.1f : 1f;
-                    int delayBeforeTextLine1 = (int)(300 * waveDelay);
-                    int delayBeforeTextLine2 = (int)(500 * waveDelay);
-                    int delayAfterText = (int)(2000 * waveDelay);
+                    float textDelayMultiplier = IsDebugWaves ? 0.1f : 1f;
+                    int delayBeforeTextInMillisecondsLine1 = (int)(300 * textDelayMultiplier);
+                    int delayBeforeTextInMillisecondsLine2 = (int)(500 * textDelayMultiplier);
+                  
                     
                     try
                     {
                         // Show wave line 1
-                        await Task.Delay(delayBeforeTextLine1, destroyCancellationToken);
+                        await Task.Delay(delayBeforeTextInMillisecondsLine1, destroyCancellationToken);
                         _common.MainUI.WaveTitleLabel.text = $"Wave {_gameStateSystem.RoundData.RoundCurrent} " +
                                                         $"of {_gameStateSystem.RoundData.RoundMax}";
                         
                         // Show wave line 2
-                        await Task.Delay(delayBeforeTextLine2, destroyCancellationToken);
+                        await Task.Delay(delayBeforeTextInMillisecondsLine2, destroyCancellationToken);
                         _common.MainUI.WaveTitleLabel.text = $"Wave {_gameStateSystem.RoundData.RoundCurrent} " +
                                                         $"of {_gameStateSystem.RoundData.RoundMax}\n"+
                                                         $"Kill {_enemyKillsThisRoundMax} Enemies!";
                         
                         // Clear wave lines
-                        await Task.Delay(delayAfterText, destroyCancellationToken);
+                        await Task.Delay(_delayAfterTextInMilliseconds, destroyCancellationToken);
                         _common.MainUI.WaveTitleLabel.text = "";
                     }
                     catch (OperationCanceledException)
@@ -200,13 +206,19 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                         return;
                     }
                     
+                    
                     _gameStateSystem.GameState = GameState.RoundStarted;
                     break;
                 case GameState.RoundStarted: 
                     // The core game is played here...
                     break;
                 case GameState.GameEnding: 
+      
+                    // Show text
+                    await Task.Delay(500, destroyCancellationToken);
+                    _common.MainUI.WaveTitleLabel.text = $"You Won!\n (Click Restart)";
                     _gameStateSystem.GameState = GameState.GameEnded;
+                    
                     break;
                 case GameState.GameEnded: 
                     _gameStateSystem.IsGameOver = true;
@@ -240,9 +252,19 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 _enemyKillsThisRoundCurrent++;
             }
 
+            // End of round?
             if (_enemyKillsThisRoundCurrent >= _enemyKillsThisRoundMax)
             {
-                _gameStateSystem.GameState = GameState.RoundStarting;
+                //End of game?
+                if (_gameStateSystem.RoundData.RoundCurrent >= _gameStateSystem.RoundData.RoundMax)
+                {
+                    _gameStateSystem.GameState = GameState.GameEnding;
+                }
+                else
+                {
+                    //Next round
+                    _gameStateSystem.GameState = GameState.RoundStarting;
+                }
             }
             
             RefreshWaveProgressLabel();

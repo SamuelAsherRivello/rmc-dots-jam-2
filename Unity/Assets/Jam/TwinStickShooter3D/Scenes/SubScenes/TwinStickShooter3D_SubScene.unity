@@ -598,7 +598,8 @@ MonoBehaviour:
   SpawnDistanceToPlayer: 12
   InitialMoveSpeed: 4
   InitialTurnSpeed: 3
-  SpawnIntervalInSeconds: 0.8
+  InitialHealth: 1
+  SpawnIntervalInSecondsMax: 1
 --- !u!4 &747642746
 Transform:
   m_ObjectHideFlags: 0
@@ -759,27 +760,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsSystemEnabled: 1
---- !u!1 &1302887971 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 701181624954122511, guid: a1bd441edf8f09c4da06808f49601c86,
-    type: 3}
-  m_PrefabInstance: {fileID: 8651347657212609387}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1302887981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1302887971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdf8891f7e184f298be0aa5f2b41701d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MemberOfLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!1 &1465897714
 GameObject:
   m_ObjectHideFlags: 0
@@ -1495,11 +1475,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 701181624954122511, guid: a1bd441edf8f09c4da06808f49601c86,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1302887981}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1bd441edf8f09c4da06808f49601c86, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

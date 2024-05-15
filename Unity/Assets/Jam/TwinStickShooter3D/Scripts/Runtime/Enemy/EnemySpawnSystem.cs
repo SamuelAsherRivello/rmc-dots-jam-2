@@ -82,7 +82,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                      SystemAPI.Query<RefRW<EnemySpawnComponent>>().
                          WithEntityAccess())
             {
-                if (SystemAPI.Time.ElapsedTime < enemySpawnComponent.ValueRW.NextSpawnTime)
+                if (SystemAPI.Time.ElapsedTime < enemySpawnComponent.ValueRW.SpawnNextAtElapsedTime)
                     continue;
 
                 EnemyMoveComponent newEnemyMoveComponent = new EnemyMoveComponent(
@@ -108,7 +108,10 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 // Use Add because current authoring does not add any HealthComponent to Prefab
                 ecb.AddComponent(enemyEntity, newHealthComponent);
 
-                enemySpawnComponent.ValueRW.NextSpawnTime = SystemAPI.Time.ElapsedTime + enemySpawnComponent.ValueRO.SpawnIntervalInSeconds;
+                enemySpawnComponent.ValueRW.SpawnNextAtElapsedTime = 
+                    (float)(SystemAPI.Time.ElapsedTime + enemySpawnComponent.ValueRO.SpawnIntervalInSecondsCurrent);
+                
+                Debug.Log("2 NextSpawnTime: " + enemySpawnComponent.ValueRO.SpawnIntervalInSecondsCurrent);
 
                 // Add to POSSIBLE points for each enemy
                 scoringComponent.ScoreComponent01.ScoreMax += 1;
@@ -136,10 +139,27 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             GameStateComponent gameStateComponent = SystemAPI.GetSingleton<GameStateComponent>();
             if (gameStateComponent.GameState == GameState.RoundStarted)
             {
+                // Get Component
+                var enemySpawnComponent = SystemAPI.GetSingleton<EnemySpawnComponent>();
+                
                 //Set difficulty
-                var useThis = gameStateComponent.RoundData.RoundCurrent;
-                var andOrThis = gameStateComponent.RoundData.RoundMax;
-                Debug.Log($"EnemySpawnSystem. TODO: Set Difficulty via {useThis}/{andOrThis}.");
+                float useThis = gameStateComponent.RoundData.RoundCurrent;
+                float andOrThis = gameStateComponent.RoundData.RoundMax;
+                float difficultyPercentage = (float)(useThis / andOrThis);
+   
+                // Faster every round (Ex. if min = 1 and max = 1)
+                // Wave 1 = 1 + 0.666
+                // Wave 2 = 1 + 0.333
+                // Wave 3 = 1 + 0
+                enemySpawnComponent.SpawnIntervalInSecondsCurrent =
+                    enemySpawnComponent.SpawnIntervalInSecondsMin + 
+                    enemySpawnComponent.SpawnIntervalInSecondsMax * (1 - difficultyPercentage);
+                
+                Debug.Log($"EnemySpawnSystem. difficultyPercentage = {difficultyPercentage}.");
+                Debug.Log("1 SpawnIntervalInSecondsCurrent: " + enemySpawnComponent.SpawnIntervalInSecondsCurrent);
+                
+                // Set Component
+                SystemAPI.SetSingleton<EnemySpawnComponent>(enemySpawnComponent);
             }
         }
 

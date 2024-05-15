@@ -4,32 +4,43 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
     public struct EnemySpawnComponent : IComponentData
     {
-        public Entity Prefab;
-        public float SpawnDistanceToPlayer;
-        public float SpawnIntervalInSeconds;
-        public float InitialMoveSpeed;
-        public float InitialTurnSpeed;
-        public float InitialHealth;
-
-        public double NextSpawnTime;
-
-        public EnemySpawnComponent(
-            Entity newPrefab,
+        // ROM
+        public readonly Entity Prefab;
+        public readonly float SpawnDistanceToPlayer;
+        public readonly float InitialMoveSpeed;
+        public readonly float InitialTurnSpeed;
+        public readonly float InitialHealth;
+        public readonly float SpawnIntervalInSecondsMin;
+        public readonly float SpawnIntervalInSecondsMax;
+        public float SpawnIntervalInSecondsCurrent;
+        
+        // RAM - Per difficulty
+        public float SpawnNextAtElapsedTime;
+        
+        public EnemySpawnComponent(Entity newPrefab,
             float newSpawnDistanceToPlayer,
-            float newSpawnIntervalInSeconds,
             float newInitialMoveSpeed,
             float newInitialTurnSpeed,
             float newInitialHealth,
-            double newNextSpawnTime)
+            float spawnIntervalInSecondsMin,
+            float spawnIntervalInSecondsMax
+            )
         {
             Prefab = newPrefab;
             SpawnDistanceToPlayer = newSpawnDistanceToPlayer;
-            SpawnIntervalInSeconds = newSpawnIntervalInSeconds;
             InitialMoveSpeed = newInitialMoveSpeed;
             InitialTurnSpeed = newInitialTurnSpeed;
             InitialHealth = newInitialHealth;
-
-            NextSpawnTime = newNextSpawnTime;
+            SpawnIntervalInSecondsMin = spawnIntervalInSecondsMin;
+            SpawnIntervalInSecondsMax = spawnIntervalInSecondsMax;
+            
+            //Will be overwritten each wave
+            SpawnIntervalInSecondsCurrent = -1;
+            
+            //Will be overwritten each frame
+            SpawnNextAtElapsedTime = -1;
+            
         }
+
     }
 }

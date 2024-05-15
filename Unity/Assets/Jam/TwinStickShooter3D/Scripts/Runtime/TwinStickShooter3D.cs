@@ -51,12 +51,10 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
         [Header("Difficulty")] 
         [SerializeField]
-        private int _enemiesToKillPerWave = 3;
+        private int _enemyPerWaveMultiplier = 3;
 
         [SerializeField]
         private int _totalWaves = 3;
- 
-        
         
         [Header("Debug")]
         [Tooltip("True, to show debug logs")]
@@ -180,7 +178,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     
                     // Increase difficulty
                     _enemyKillsThisRoundCurrent = 0;
-                    _enemyKillsThisRoundMax = _enemiesToKillPerWave * _gameStateSystem.RoundData.RoundCurrent;
+                    _enemyKillsThisRoundMax = _enemyPerWaveMultiplier * _gameStateSystem.RoundData.RoundCurrent;
                     RefreshWaveProgressLabel();
                     
                     // Faster waves when debugging

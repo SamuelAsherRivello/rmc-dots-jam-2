@@ -599,6 +599,7 @@ MonoBehaviour:
   InitialMoveSpeed: 4
   InitialTurnSpeed: 3
   InitialHealth: 1
+  SpawnIntervalInSecondsMin: 0.5
   SpawnIntervalInSecondsMax: 1
 --- !u!4 &747642746
 Transform:

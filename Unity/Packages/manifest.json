@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.annulusgames.lit-motion": "https://github.com/AnnulusGames/LitMotion.git?path=src/LitMotion/Assets/LitMotion",
     "com.rmc.rmc-dots": "https://github.com/SamuelAsherRivello/rmc-dots.git",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.entities.graphics": "1.2.0-pre.12",
@@ -46,8 +47,7 @@
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
   },
-  "testables" :
-  [
+  "testables": [
     "com.rmc.rmc-dots"
   ],
   "scopedRegistries": [

@@ -110,7 +110,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 
                 ecb.AddComponent<AudioComponent>(entity, new AudioComponent
                 (
-                    "Click01"
+                    "Click01",
+                    0.25f
                 ));
 
             }

@@ -1,8 +1,5 @@
 using RMC.DOTS.SystemGroups;
-using RMC.DOTS.Systems.Input;
 using RMC.DOTS.Systems.Player;
-using System.Collections;
-using System.Collections.Generic;
 using RMC.DOTS.Systems.GameState;
 using Unity.Burst;
 using Unity.Collections;
@@ -11,7 +8,6 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Extensions;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {

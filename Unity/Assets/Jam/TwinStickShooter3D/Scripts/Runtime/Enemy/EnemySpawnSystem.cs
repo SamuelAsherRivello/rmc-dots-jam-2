@@ -23,6 +23,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         //  Unity Methods  --------------------------------
         public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<RandomComponent>();
+            state.RequireForUpdate<PlayerTag>();
+            state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<EnemySpawnComponent>();
             state.RequireForUpdate<ScoringComponent>();
             state.RequireForUpdate<GameStateComponent>();
@@ -53,7 +56,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         }
 
         
-        [BurstCompile]
+        //No [BurstCompile] because of "LMotion"
         public void OnUpdate(ref SystemState state)
         {
             // Check GameStateComponent
@@ -63,20 +66,20 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 return;
             }
 
-            _localTransformLookup.Update(ref state);
-            var playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
-            float3 currentPlayerPosition = _localTransformLookup[playerEntity].Position;
-
             var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().
                 CreateCommandBuffer(state.WorldUnmanaged);
-
+            
+            _localTransformLookup.Update(ref state);
+            
+            var playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
+            float3 currentPlayerPosition = _localTransformLookup[playerEntity].Position;
             ScoringComponent scoringComponent = SystemAPI.GetSingleton<ScoringComponent>();
-            var deltaTime = SystemAPI.Time.DeltaTime;
-
             var randomComponentEntity = SystemAPI.GetSingletonEntity<RandomComponent>();
             var randomComponentAspect = SystemAPI.GetAspect<RandomComponentAspect>(randomComponentEntity);
-
-            foreach (var (enemySpawnComponent, entity) in SystemAPI.Query<RefRW<EnemySpawnComponent>>().
+            const float spawnHeight = 1.0f;
+            
+            foreach (var (enemySpawnComponent, entity) in 
+                     SystemAPI.Query<RefRW<EnemySpawnComponent>>().
                          WithEntityAccess())
             {
                 if (SystemAPI.Time.ElapsedTime < enemySpawnComponent.ValueRW.NextSpawnTime)
@@ -92,14 +95,13 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     randomComponentAspect.NextFloat(-1.0f, 1.0f)
                 )) * enemySpawnComponent.ValueRO.SpawnDistanceToPlayer;
                 
-                const float spawnHeight = 4.0f;
+     
                 float3 spawnVector = new float3(randomVectorOnGround.x, spawnHeight, randomVectorOnGround.y);
-
                 float3 newEnemyPosition = currentPlayerPosition + spawnVector;
 
-                Entity newEntity = ecb.Instantiate(enemySpawnComponent.ValueRO.Prefab);
-                ecb.SetComponent(newEntity, LocalTransform.FromPosition(newEnemyPosition));
-                ecb.SetComponent(newEntity, newEnemyMoveComponent);
+                Entity enemyEntity = ecb.Instantiate(enemySpawnComponent.ValueRO.Prefab);
+                ecb.SetComponent(enemyEntity, LocalTransform.FromPosition(newEnemyPosition));
+                ecb.SetComponent(enemyEntity, newEnemyMoveComponent);
                 
                 enemySpawnComponent.ValueRW.NextSpawnTime = SystemAPI.Time.ElapsedTime + enemySpawnComponent.ValueRO.SpawnIntervalInSeconds;
 

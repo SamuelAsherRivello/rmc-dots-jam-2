@@ -78,7 +78,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             var randomComponentAspect = SystemAPI.GetAspect<RandomComponentAspect>(randomComponentEntity);
             const float spawnHeight = 1.0f;
             
-            foreach (var (enemySpawnComponent, entity) in 
+            foreach (var (enemySpawnComponent, entityEnemySpawnComponent) in 
                      SystemAPI.Query<RefRW<EnemySpawnComponent>>().
                          WithEntityAccess())
             {
@@ -107,8 +107,11 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
                 // Add to POSSIBLE points for each enemy
                 scoringComponent.ScoreComponent01.ScoreMax += 1;
+
+                ecb.AddComponent<TweenScaleComponent>(enemyEntity, 
+                    new TweenScaleComponent(0.1f, 1, 8)); 
                 
-                ecb.AddComponent<AudioComponent>(entity, new AudioComponent
+                ecb.AddComponent<AudioComponent>(enemyEntity, new AudioComponent
                 (
                     "Click01",
                     0.25f

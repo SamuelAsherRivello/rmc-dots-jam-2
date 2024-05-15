@@ -86,10 +86,10 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 			{
 
 				// Instantiate the entity
-				var instanceEntity = ecb.Instantiate(gemDropComponent.GemPrefab);
+				var gemEntity = ecb.Instantiate(gemDropComponent.GemPrefab);
 				
 				// Move entity to initial position
-				ecb.SetComponent<LocalTransform>(instanceEntity, new LocalTransform
+				ecb.SetComponent<LocalTransform>(gemEntity, new LocalTransform
 				{
 					Position = localTransform.Position + -localTransform.Forward() * 1.5f, //'in front' of the eyes
 					Rotation = quaternion.identity,

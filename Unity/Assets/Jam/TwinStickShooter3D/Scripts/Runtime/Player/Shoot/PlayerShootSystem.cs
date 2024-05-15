@@ -58,10 +58,10 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 if (playerShootAspect.CanShoot(deltaTime))
                 {
                     // Instantiate the entity
-                    var instanceEntity = ecb.Instantiate(playerShootAspect.BulletPrefab);
+                    var bulletEntity = ecb.Instantiate(playerShootAspect.BulletPrefab);
                     
                     // Move entity to initial position
-                    ecb.SetComponent<LocalTransform>(instanceEntity, new LocalTransform
+                    ecb.SetComponent<LocalTransform>(bulletEntity, new LocalTransform
                     {
                         Position = playerShootAspect.Position + -playerShootAspect.Forward * 1.5f, //'in front' of the eyes
                         Rotation = quaternion.identity,
@@ -70,16 +70,18 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
                     // Push entity once
                     var bulletForce = -playerShootAspect.Forward * playerShootAspect.BulletSpeed;
-                    ecb.AddComponent<PhysicsVelocityImpulseComponent>(instanceEntity, new PhysicsVelocityImpulseComponent
+                    ecb.AddComponent<PhysicsVelocityImpulseComponent>(bulletEntity, new PhysicsVelocityImpulseComponent
                     {
                         CanBeNegative = false,
                         MinForce = bulletForce,
                         MaxForce = bulletForce
                     });
 
+                    ecb.AddComponent<TweenScaleComponent>(bulletEntity, 
+                        new TweenScaleComponent(0.1f, 1, 8)); 
+                    
                     // Play sound
-                    var audioEntity = ecb.CreateEntity();
-                    ecb.AddComponent<AudioComponent>(audioEntity, new AudioComponent
+                    ecb.AddComponent<AudioComponent>(bulletEntity, new AudioComponent
                     (
                         "Click01"
                     ));

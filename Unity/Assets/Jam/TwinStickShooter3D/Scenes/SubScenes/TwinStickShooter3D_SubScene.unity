@@ -598,7 +598,7 @@ MonoBehaviour:
   SpawnDistanceToPlayer: 12
   InitialMoveSpeed: 4
   InitialTurnSpeed: 3
-  SpawnIntervalInSeconds: 0.2
+  SpawnIntervalInSeconds: 0.8
 --- !u!4 &747642746
 Transform:
   m_ObjectHideFlags: 0

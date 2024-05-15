@@ -102,7 +102,12 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 Entity enemyEntity = ecb.Instantiate(enemySpawnComponent.ValueRO.Prefab);
                 ecb.SetComponent(enemyEntity, LocalTransform.FromPosition(newEnemyPosition));
                 ecb.SetComponent(enemyEntity, newEnemyMoveComponent);
-                
+
+                HealthComponent newHealthComponent = new HealthComponent(enemySpawnComponent.ValueRO.InitialHealth, enemySpawnComponent.ValueRO.InitialHealth);
+
+                // Use Add because current authoring does not add any HealthComponent to Prefab
+                ecb.AddComponent(enemyEntity, newHealthComponent);
+
                 enemySpawnComponent.ValueRW.NextSpawnTime = SystemAPI.Time.ElapsedTime + enemySpawnComponent.ValueRO.SpawnIntervalInSeconds;
 
                 // Add to POSSIBLE points for each enemy

@@ -8,6 +8,7 @@ using RMC.DOTS.Systems.Scoring;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 {
@@ -79,14 +80,18 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 			////////////////////////////////
 			// ENEMY
 			////////////////////////////////
-			foreach (var (enemyTag, enemyWasHitTag, localTransform, gemDropComponent, entity)
-				in SystemAPI.Query<EnemyTag, EnemyWasHitThisFrameTag, LocalTransform, GemDropComponent>().
+			foreach (var (healthAspect, enemyTag, enemyWasHitTag, localTransform, gemDropComponent, entity)
+				in SystemAPI.Query<HealthAspect, EnemyTag, EnemyWasHitThisFrameTag, LocalTransform, GemDropComponent>().
 					WithNone<EnemyWasDestroyed>().
 				WithEntityAccess())
 			{
+                const float damageDealtPerBullet = 1.0f;
+                healthAspect.DealDamage(damageDealtPerBullet);
+                if (!healthAspect.IsDead)
+                    continue;
 
-				// Instantiate the entity
-				var gemEntity = ecb.Instantiate(gemDropComponent.GemPrefab);
+                // Instantiate the entity
+                var gemEntity = ecb.Instantiate(gemDropComponent.GemPrefab);
 				
 				// Move entity to initial position
 				ecb.SetComponent<LocalTransform>(gemEntity, new LocalTransform

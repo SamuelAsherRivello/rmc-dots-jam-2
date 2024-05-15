@@ -9,6 +9,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         public float SpawnIntervalInSeconds;
         public float InitialMoveSpeed;
         public float InitialTurnSpeed;
+        public float InitialHealth;
 
         public double NextSpawnTime;
 
@@ -18,6 +19,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             float newSpawnIntervalInSeconds,
             float newInitialMoveSpeed,
             float newInitialTurnSpeed,
+            float newInitialHealth,
             double newNextSpawnTime)
         {
             Prefab = newPrefab;
@@ -25,6 +27,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             SpawnIntervalInSeconds = newSpawnIntervalInSeconds;
             InitialMoveSpeed = newInitialMoveSpeed;
             InitialTurnSpeed = newInitialTurnSpeed;
+            InitialHealth = newInitialHealth;
 
             NextSpawnTime = newNextSpawnTime;
         }

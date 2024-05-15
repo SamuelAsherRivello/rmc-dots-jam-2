@@ -19,6 +19,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         public float SpawnDistanceToPlayer = 10.0f;
         public float InitialMoveSpeed = 4.0f;
         public float InitialTurnSpeed = 1.5f;
+        public float InitialHealth = 1.0f;
         public float SpawnIntervalInSeconds = 1.0f;
 
         public class EnemySpawnerSystemAuthoringBaker : Baker<EnemySpawnSystemAuthoring>
@@ -37,6 +38,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     authoring.SpawnIntervalInSeconds,
                     authoring.InitialMoveSpeed,
                     authoring.InitialTurnSpeed,
+                    authoring.InitialHealth,
                     elapsedTime + authoring.SpawnIntervalInSeconds
                 ));
             }

@@ -38,7 +38,12 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                      in SystemAPI.Query<RefRO<PhysicsTriggerOutputComponent>>().
                          WithEntityAccess().WithAll<GemTag>().WithNone<GemWasHitTag>())
             {
-                ecb.AddComponent<GemWasHitTag>(entity);
+                if (physicsTriggerOutputComponent.ValueRO.PhysicsTriggerType == PhysicsTriggerType.Enter &&
+                    physicsTriggerOutputComponent.ValueRO.TimeFrameCountForLastCollision == Time.frameCount)
+                {
+                    ecb.AddComponent<GemWasHitTag>(entity);
+                }
+            
             }
             
             
@@ -47,7 +52,11 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                      in SystemAPI.Query<RefRO<PhysicsTriggerOutputComponent>>().
                          WithEntityAccess().WithAll<BulletTag>().WithNone<BulletWasHitTag>())
             {
-                ecb.AddComponent<BulletWasHitTag>(entity);
+                if (physicsTriggerOutputComponent.ValueRO.PhysicsTriggerType == PhysicsTriggerType.Enter &&
+                    physicsTriggerOutputComponent.ValueRO.TimeFrameCountForLastCollision == Time.frameCount)
+                {
+                    ecb.AddComponent<BulletWasHitTag>(entity);
+                }
             }
 
 			//ENEMY
@@ -55,8 +64,12 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 					 in SystemAPI.Query<RefRO<PhysicsTriggerOutputComponent>>().
 						 WithEntityAccess().WithAll<EnemyTag>().WithNone<EnemyWasHitTag>())
 			{
-				ecb.AddComponent<EnemyWasHitTag>(entity);
-			}
+                if (physicsTriggerOutputComponent.ValueRO.PhysicsTriggerType == PhysicsTriggerType.Enter &&
+                    physicsTriggerOutputComponent.ValueRO.TimeFrameCountForLastCollision == Time.frameCount)
+                {
+                    ecb.AddComponent<EnemyWasHitTag>(entity);
+                }
+            }
 		}
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using RMC.DOTS.SystemGroups;
+using RMC.DOTS.Systems.Audio;
 using RMC.DOTS.Systems.GameState;
 using RMC.DOTS.Systems.Scoring;
 using Unity.Burst;
@@ -66,8 +67,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             var playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
             float3 currentPlayerPosition = _localTransformLookup[playerEntity].Position;
 
-            var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
-            var beginSimulationECB = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+            var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().
+                CreateCommandBuffer(state.WorldUnmanaged);
 
             ScoringComponent scoringComponent = SystemAPI.GetSingleton<ScoringComponent>();
             var deltaTime = SystemAPI.Time.DeltaTime;
@@ -75,7 +76,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             var randomComponentEntity = SystemAPI.GetSingletonEntity<RandomComponent>();
             var randomComponentAspect = SystemAPI.GetAspect<RandomComponentAspect>(randomComponentEntity);
 
-            foreach (var enemySpawnComponent in SystemAPI.Query<RefRW<EnemySpawnComponent>>())
+            foreach (var (enemySpawnComponent, entity) in SystemAPI.Query<RefRW<EnemySpawnComponent>>().
+                         WithEntityAccess())
             {
                 if (SystemAPI.Time.ElapsedTime < enemySpawnComponent.ValueRW.NextSpawnTime)
                     continue;
@@ -95,14 +97,20 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
 
                 float3 newEnemyPosition = currentPlayerPosition + spawnVector;
 
-                Entity newEntity = beginSimulationECB.Instantiate(enemySpawnComponent.ValueRO.Prefab);
-                beginSimulationECB.SetComponent(newEntity, LocalTransform.FromPosition(newEnemyPosition));
-                beginSimulationECB.SetComponent(newEntity, newEnemyMoveComponent);
+                Entity newEntity = ecb.Instantiate(enemySpawnComponent.ValueRO.Prefab);
+                ecb.SetComponent(newEntity, LocalTransform.FromPosition(newEnemyPosition));
+                ecb.SetComponent(newEntity, newEnemyMoveComponent);
                 
                 enemySpawnComponent.ValueRW.NextSpawnTime = SystemAPI.Time.ElapsedTime + enemySpawnComponent.ValueRO.SpawnIntervalInSeconds;
 
                 // Add to POSSIBLE points for each enemy
                 scoringComponent.ScoreComponent01.ScoreMax += 1;
+                
+                ecb.AddComponent<AudioComponent>(entity, new AudioComponent
+                (
+                    "Click01"
+                ));
+
             }
             
             SystemAPI.SetSingleton<ScoringComponent>(scoringComponent);

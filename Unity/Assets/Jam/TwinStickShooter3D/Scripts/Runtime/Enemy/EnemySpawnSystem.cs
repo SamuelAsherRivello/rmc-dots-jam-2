@@ -111,8 +111,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 enemySpawnComponent.ValueRW.SpawnNextAtElapsedTime = 
                     (float)(SystemAPI.Time.ElapsedTime + enemySpawnComponent.ValueRO.SpawnIntervalInSecondsCurrent);
                 
-                Debug.Log("2 NextSpawnTime: " + enemySpawnComponent.ValueRO.SpawnIntervalInSecondsCurrent);
-
                 // Add to POSSIBLE points for each enemy
                 scoringComponent.ScoreComponent01.ScoreMax += 1;
 
@@ -155,8 +153,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     enemySpawnComponent.SpawnIntervalInSecondsMin + 
                     enemySpawnComponent.SpawnIntervalInSecondsMax * (1 - difficultyPercentage);
                 
-                Debug.Log($"EnemySpawnSystem. difficultyPercentage = {difficultyPercentage}.");
-                Debug.Log("1 SpawnIntervalInSecondsCurrent: " + enemySpawnComponent.SpawnIntervalInSecondsCurrent);
+                //Debug.Log($"EnemySpawnSystem. difficultyPercentage = {difficultyPercentage}.");
+                //Debug.Log("1 SpawnIntervalInSecondsCurrent: " + enemySpawnComponent.SpawnIntervalInSecondsCurrent);
                 
                 // Set Component
                 SystemAPI.SetSingleton<EnemySpawnComponent>(enemySpawnComponent);

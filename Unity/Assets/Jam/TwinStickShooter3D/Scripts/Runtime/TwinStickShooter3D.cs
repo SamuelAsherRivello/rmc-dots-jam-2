@@ -169,7 +169,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                     
                     // Increase difficulty
                     _enemyKillsThisRoundCurrent = 0;
-                    _enemyKillsThisRoundMax = 1 * _gameStateSystem.RoundData.RoundCurrent;
+                    _enemyKillsThisRoundMax = 3 * _gameStateSystem.RoundData.RoundCurrent;
                     RefreshWaveProgressLabel();
                     
                     // Faster waves when debugging

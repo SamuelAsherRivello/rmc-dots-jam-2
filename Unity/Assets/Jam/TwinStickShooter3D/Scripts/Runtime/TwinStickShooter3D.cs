@@ -6,6 +6,7 @@ using RMC.DOTS.Systems.GameState;
 using RMC.DOTS.Systems.Scoring;
 using RMC.DOTS.Utilities;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Scenes;
 using UnityEngine;
 
@@ -78,7 +79,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             // The Unity Project Must Have These Layers
             // LayerMaskUtility Shows Errors If Anything Is Missing
             LayerMaskUtility.AssertLayerMask("Player", 6);
+            LayerMaskUtility.AssertLayerMask("Bullet", 10);
             LayerMaskUtility.AssertLayerMask("Enemy", 11);
+            LayerMaskUtility.AssertLayerMask("Wall", 12);
             LayerMaskUtility.AssertLayerMask("Gem", 13);
             
             // ECS
@@ -248,11 +251,12 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         }
         
         
-        private void WasHitSystem_OnWasHit(Type t, bool wasDestroyed)
+        private void WasHitSystem_OnWasHit(Type typeHit, bool wasDestroyed)
         {
-            if (t == typeof(EnemyTag) && wasDestroyed)
+            
+            if (typeHit == typeof(EnemyTag) && wasDestroyed)
             {
-                _enemyKillsThisRoundCurrent++;
+                _enemyKillsThisRoundCurrent = math.min(++_enemyKillsThisRoundCurrent, _enemyKillsThisRoundMax);
             }
 
             // End of round?

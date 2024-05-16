@@ -4,7 +4,6 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics.Aspects;
-using UnityEngine;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
@@ -28,7 +27,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02
             float deltaTime = SystemAPI.Time.DeltaTime;
 
             foreach (var (rigidBodyAspect, playerFaceComponent)
-                in SystemAPI.Query<RigidBodyAspect, PlayerFaceComponent>())
+                in SystemAPI.Query<RigidBodyAspect, RefRO<PlayerFaceComponent>>())
             {
                 
                 // If lookComposite is zero or near zero, skip this iteration
@@ -50,7 +49,8 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02
                 quaternion currentRotation = rigidBodyAspect.Rotation;
 
                 // Interpolate between the current rotation and the target rotation
-                quaternion newRotation = math.slerp(currentRotation, targetRotation, playerFaceComponent.Value * deltaTime);
+                quaternion newRotation = math.slerp(currentRotation, targetRotation, 
+                    playerFaceComponent.ValueRO.Value * deltaTime);
 
                 // Set the new rotation of the player
                 rigidBodyAspect.Rotation = newRotation;

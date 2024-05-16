@@ -8,7 +8,6 @@ using RMC.DOTS.Systems.Scoring;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
@@ -81,7 +80,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02
 			// ENEMY
 			////////////////////////////////
 			foreach (var (healthAspect, enemyTag, enemyWasHitTag, localTransform, gemDropComponent, entity)
-				in SystemAPI.Query<HealthAspect, EnemyTag, EnemyWasHitThisFrameTag, LocalTransform, GemDropComponent>().
+				in SystemAPI.Query<HealthAspect, EnemyTag, EnemyWasHitThisFrameTag, LocalTransform, GemSpawnComponent>().
 					WithNone<EnemyWasDestroyed>().
 				WithEntityAccess())
 			{

@@ -18,7 +18,6 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            return;
             float deltaTime = SystemAPI.Time.DeltaTime;
 
             foreach (var (rotateComponent, localTransform)

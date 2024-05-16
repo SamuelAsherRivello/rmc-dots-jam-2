@@ -5,10 +5,8 @@ using RMC.DOTS.Systems.Input;
 using RMC.DOTS.Systems.PhysicsVelocityImpulse;
 using RMC.DOTS.Systems.Player;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Physics.Aspects;
 using Unity.Transforms;
 
 namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS

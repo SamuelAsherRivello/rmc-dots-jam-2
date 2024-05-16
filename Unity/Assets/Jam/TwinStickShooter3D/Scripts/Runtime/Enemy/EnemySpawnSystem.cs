@@ -6,7 +6,6 @@ using RMC.DOTS.Systems.Scoring;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
-using UnityEngine;
 using RMC.DOTS.Systems.Player;
 using RMC.DOTS.Systems.Random;
 using Unity.Mathematics;
@@ -15,7 +14,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02
 {
     [UpdateInGroup(typeof(PauseableSystemGroup))]
     [BurstCompile]
-    public partial struct EnemySpawnSystem : ISystem
+    public partial struct EnemySpawnSystem2 : ISystem
     {
         //  Fields ----------------------------------------
         private ComponentLookup<LocalTransform> _localTransformLookup;
@@ -70,12 +69,13 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02
                 CreateCommandBuffer(state.WorldUnmanaged);
             
             _localTransformLookup.Update(ref state);
+            var playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
+            float3 currentPlayerPosition = _localTransformLookup.GetRefRO(playerEntity).ValueRO.Position;
             
-     
             ScoringComponent scoringComponent = SystemAPI.GetSingleton<ScoringComponent>();
             var randomComponentEntity = SystemAPI.GetSingletonEntity<RandomComponent>();
             var randomComponentAspect = SystemAPI.GetAspect<RandomComponentAspect>(randomComponentEntity);
-            const float spawnHeight = 1.0f;
+            const float spawnHeight = 3.0f;
             
             foreach (var (enemySpawnComponent, entityEnemySpawnComponent) in 
                      SystemAPI.Query<RefRW<EnemySpawnComponent>>().
@@ -84,8 +84,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02
                 if (SystemAPI.Time.ElapsedTime < enemySpawnComponent.ValueRW.SpawnNextAtElapsedTime)
                     continue;
 
-                var playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
-                float3 currentPlayerPosition = _localTransformLookup.GetRefRO(playerEntity).ValueRO.Position;
+
                 
                 EnemyMoveComponent newEnemyMoveComponent = new EnemyMoveComponent(
                     enemySpawnComponent.ValueRO.InitialMoveSpeed,

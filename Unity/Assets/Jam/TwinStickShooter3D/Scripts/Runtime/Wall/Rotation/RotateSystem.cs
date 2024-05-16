@@ -4,7 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
+namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
     [UpdateInGroup(typeof(PauseableSystemGroup))]
     public partial struct RotateSystem : ISystem
@@ -18,21 +18,19 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            return;
             float deltaTime = SystemAPI.Time.DeltaTime;
-            var job = new RotatePickupJob { DeltaTime = deltaTime };
-            job.ScheduleParallel();
-        }
-    }
 
-    [BurstCompile]
-    public partial struct RotatePickupJob : IJobEntity
-    {
-        public float DeltaTime;
-
-        [BurstCompile]
-        private void Execute(ref LocalTransform transform, in RotateComponent rotateComponent)
-        {
-            transform = transform.Rotate(quaternion.Euler(rotateComponent.Direction * rotateComponent.Speed * DeltaTime));
+            foreach (var (rotateComponent, localTransform)
+                     in SystemAPI.Query<RefRO<RotateComponent>, RefRW<LocalTransform>>())
+            {
+                localTransform.ValueRW = localTransform.ValueRW.Rotate(
+                    
+                    quaternion.Euler(rotateComponent.ValueRO.Direction * 
+                                     rotateComponent.ValueRO.Speed * 
+                                     deltaTime)
+                    );
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
+namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
     /// <summary>
     /// Wraps the <see cref="PlayerShootComponent"/> needed for the player to shoot via

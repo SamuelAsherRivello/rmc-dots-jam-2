@@ -1,5 +1,5 @@
 {
-    "name": "RMC.DOTS.Samples.TwinStickShooter3D.Runtime",
+    "name": "RMC.DOTS.Samples.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS.Runtime",
     "rootNamespace": "",
     "references": [
         "GUID:f2381d29563bc3c49ab35691478f3482",

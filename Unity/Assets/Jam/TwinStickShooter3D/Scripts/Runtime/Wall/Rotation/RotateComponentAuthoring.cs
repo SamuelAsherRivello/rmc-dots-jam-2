@@ -2,7 +2,7 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
+namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
     public class RotateComponentAuthoring : MonoBehaviour
     {

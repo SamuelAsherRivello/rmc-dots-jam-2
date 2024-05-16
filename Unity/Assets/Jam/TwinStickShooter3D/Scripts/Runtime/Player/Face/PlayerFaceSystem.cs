@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using Unity.Physics.Aspects;
 using UnityEngine;
 
-namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
+namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
     /// <summary>
     /// This system moves the player in 3D space.

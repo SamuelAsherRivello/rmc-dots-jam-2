@@ -12,7 +12,7 @@ using RMC.DOTS.Systems.FollowTarget;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
+namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
     [UpdateInGroup(typeof(PauseableSystemGroup))]
     [BurstCompile]

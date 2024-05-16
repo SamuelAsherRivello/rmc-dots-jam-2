@@ -11,7 +11,7 @@ using RMC.DOTS.Systems.Player;
 using RMC.DOTS.Systems.Random;
 using Unity.Mathematics;
 
-namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
+namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
     [UpdateInGroup(typeof(PauseableSystemGroup))]
     [BurstCompile]
@@ -71,8 +71,7 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
             
             _localTransformLookup.Update(ref state);
             
-            var playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
-            float3 currentPlayerPosition = _localTransformLookup[playerEntity].Position;
+     
             ScoringComponent scoringComponent = SystemAPI.GetSingleton<ScoringComponent>();
             var randomComponentEntity = SystemAPI.GetSingletonEntity<RandomComponent>();
             var randomComponentAspect = SystemAPI.GetAspect<RandomComponentAspect>(randomComponentEntity);
@@ -85,6 +84,9 @@ namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
                 if (SystemAPI.Time.ElapsedTime < enemySpawnComponent.ValueRW.SpawnNextAtElapsedTime)
                     continue;
 
+                var playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
+                float3 currentPlayerPosition = _localTransformLookup.GetRefRO(playerEntity).ValueRO.Position;
+                
                 EnemyMoveComponent newEnemyMoveComponent = new EnemyMoveComponent(
                     enemySpawnComponent.ValueRO.InitialMoveSpeed,
                     enemySpawnComponent.ValueRO.InitialTurnSpeed

@@ -1,7 +1,7 @@
-using RMC.DOTS.Samples.Games.TwinStickShooter3D;
+using RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS;
 using UnityEngine;
 
-namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
+namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
     //  Namespace Properties ------------------------------
 

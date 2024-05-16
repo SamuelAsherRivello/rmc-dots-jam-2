@@ -2,7 +2,7 @@ using RMC.DOTS.Systems.Spawn;
 using Unity.Entities;
 using UnityEngine;
 
-namespace RMC.DOTS.Samples.Games.TwinStickShooter3D
+namespace RMC.DOTS.Samples.Games.TwinStickShooter3D.TwinStickShooter3D_Version02_DOTS
 {
     /// <summary>
     /// Place this MonoBehaviour on a GameObject in the Scene
